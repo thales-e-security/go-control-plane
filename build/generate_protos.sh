@@ -5,7 +5,7 @@ set -o pipefail
 shopt -s nullglob
 
 root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-xds=${root}/vendor/github.com/envoyproxy/data-plane-api
+xds=${root}/vendor/github.com/thales-e-security/data-plane-api
 
 echo "Expecting protoc version >= 3.5.0:"
 protoc=$(which protoc)
