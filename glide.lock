@@ -1,8 +1,10 @@
-hash: b822b3a802107e4f825f218cd178bff9fd39a5d7e6fdf3f704cd2acd067ebee9
-updated: 2018-09-24T13:23:57.33690157-07:00
+hash: 358afb7e186ba10671a9c5bd238e4a764947d7a6e781f3260bcbecc98b56519a
+updated: 2018-11-28T14:41:08.164871006Z
 imports:
-- name: github.com/thales-e-security/data-plane-api
-  version: af972f35f3c346ca3aa841808e87ad2ec519f978
+- name: github.com/envoyproxy/data-plane-api
+  version: 2da5b9d2763fd9296b384efd3eff8e8593773792
+  repo: git@github.com:thales-e-security/data-plane-api
+  vcs: git
 - name: github.com/gogo/googleapis
   version: 0cd9801be74a10d5ac39d69626eac8255ffcd502
   subpackages:
@@ -27,12 +29,14 @@ imports:
   - ptypes/any
   - ptypes/duration
   - ptypes/timestamp
+- name: github.com/konsorten/go-windows-terminal-sequences
+  version: 5c8c8bd35d3832f5d134ae1e1e375b69a4d25242
 - name: github.com/lyft/protoc-gen-validate
   version: f9d2b11e44149635b23a002693b76512b01ae515
   subpackages:
   - validate
 - name: github.com/sirupsen/logrus
-  version: 3e01752db0189b9157070a0e1668a620f9a85da2
+  version: bcd833dfe83d3cebad139e4a29ed79cb2318bf95
 - name: golang.org/x/crypto
   version: 5119cf507ed5294cc409c092980c7497ee5d6fd2
   subpackages:
