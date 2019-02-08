@@ -111,12 +111,12 @@ type ThriftProxy struct {
 	// The human readable prefix to use when emitting statistics.
 	StatPrefix string `protobuf:"bytes,1,opt,name=stat_prefix,json=statPrefix,proto3" json:"stat_prefix,omitempty"`
 	// The route table for the connection manager is static and is specified in this property.
-	RouteConfig *RouteConfiguration `protobuf:"bytes,4,opt,name=route_config,json=routeConfig" json:"route_config,omitempty"`
+	RouteConfig *RouteConfiguration `protobuf:"bytes,4,opt,name=route_config,json=routeConfig,proto3" json:"route_config,omitempty"`
 	// A list of individual Thrift filters that make up the filter chain for requests made to the
 	// Thrift proxy. Order matters as the filters are processed sequentially. For backwards
 	// compatibility, if no thrift_filters are specified, a default Thrift router filter
 	// (`envoy.filters.thrift.router`) is used.
-	ThriftFilters        []*ThriftFilter `protobuf:"bytes,5,rep,name=thrift_filters,json=thriftFilters" json:"thrift_filters,omitempty"`
+	ThriftFilters        []*ThriftFilter `protobuf:"bytes,5,rep,name=thrift_filters,json=thriftFilters,proto3" json:"thrift_filters,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
 	XXX_unrecognized     []byte          `json:"-"`
 	XXX_sizecache        int32           `json:"-"`
@@ -202,7 +202,7 @@ type ThriftFilter struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Filter specific configuration which depends on the filter being
 	// instantiated. See the supported filters for further documentation.
-	Config               *types.Struct `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
+	Config               *types.Struct `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -466,6 +466,9 @@ func encodeVarintThriftProxy(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *ThriftProxy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.StatPrefix)
@@ -495,6 +498,9 @@ func (m *ThriftProxy) Size() (n int) {
 }
 
 func (m *ThriftFilter) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -512,6 +518,9 @@ func (m *ThriftFilter) Size() (n int) {
 }
 
 func (m *ThriftProtocolOptions) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Transport != 0 {

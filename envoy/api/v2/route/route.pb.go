@@ -147,47 +147,47 @@ type VirtualHost struct {
 	//   host/authority header. Only a single virtual host in the entire route
 	//   configuration can match on ``*``. A domain must be unique across all virtual
 	//   hosts or the config will fail to load.
-	Domains []string `protobuf:"bytes,2,rep,name=domains" json:"domains,omitempty"`
+	Domains []string `protobuf:"bytes,2,rep,name=domains,proto3" json:"domains,omitempty"`
 	// The list of routes that will be matched, in order, for incoming requests.
 	// The first route that matches will be used.
-	Routes []Route `protobuf:"bytes,3,rep,name=routes" json:"routes"`
+	Routes []Route `protobuf:"bytes,3,rep,name=routes,proto3" json:"routes"`
 	// Specifies the type of TLS enforcement the virtual host expects. If this option is not
 	// specified, there is no TLS requirement for the virtual host.
 	RequireTls VirtualHost_TlsRequirementType `protobuf:"varint,4,opt,name=require_tls,json=requireTls,proto3,enum=envoy.api.v2.route.VirtualHost_TlsRequirementType" json:"require_tls,omitempty"`
 	// A list of virtual clusters defined for this virtual host. Virtual clusters
 	// are used for additional statistics gathering.
-	VirtualClusters []*VirtualCluster `protobuf:"bytes,5,rep,name=virtual_clusters,json=virtualClusters" json:"virtual_clusters,omitempty"`
+	VirtualClusters []*VirtualCluster `protobuf:"bytes,5,rep,name=virtual_clusters,json=virtualClusters,proto3" json:"virtual_clusters,omitempty"`
 	// Specifies a set of rate limit configurations that will be applied to the
 	// virtual host.
-	RateLimits []*RateLimit `protobuf:"bytes,6,rep,name=rate_limits,json=rateLimits" json:"rate_limits,omitempty"`
+	RateLimits []*RateLimit `protobuf:"bytes,6,rep,name=rate_limits,json=rateLimits,proto3" json:"rate_limits,omitempty"`
 	// Specifies a list of HTTP headers that should be added to each request
 	// handled by this virtual host. Headers specified at this level are applied
 	// after headers from enclosed :ref:`envoy_api_msg_route.Route` and before headers from the
 	// enclosing :ref:`envoy_api_msg_RouteConfiguration`. For more information, including
 	// details on header value syntax, see the documentation on :ref:`custom request headers
 	// <config_http_conn_man_headers_custom_request_headers>`.
-	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,7,rep,name=request_headers_to_add,json=requestHeadersToAdd" json:"request_headers_to_add,omitempty"`
+	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,7,rep,name=request_headers_to_add,json=requestHeadersToAdd,proto3" json:"request_headers_to_add,omitempty"`
 	// Specifies a list of HTTP headers that should be removed from each request
 	// handled by this virtual host.
-	RequestHeadersToRemove []string `protobuf:"bytes,13,rep,name=request_headers_to_remove,json=requestHeadersToRemove" json:"request_headers_to_remove,omitempty"`
+	RequestHeadersToRemove []string `protobuf:"bytes,13,rep,name=request_headers_to_remove,json=requestHeadersToRemove,proto3" json:"request_headers_to_remove,omitempty"`
 	// Specifies a list of HTTP headers that should be added to each response
 	// handled by this virtual host. Headers specified at this level are applied
 	// after headers from enclosed :ref:`envoy_api_msg_route.Route` and before headers from the
 	// enclosing :ref:`envoy_api_msg_RouteConfiguration`. For more information, including
 	// details on header value syntax, see the documentation on :ref:`custom request headers
 	// <config_http_conn_man_headers_custom_request_headers>`.
-	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,10,rep,name=response_headers_to_add,json=responseHeadersToAdd" json:"response_headers_to_add,omitempty"`
+	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,10,rep,name=response_headers_to_add,json=responseHeadersToAdd,proto3" json:"response_headers_to_add,omitempty"`
 	// Specifies a list of HTTP headers that should be removed from each response
 	// handled by this virtual host.
-	ResponseHeadersToRemove []string `protobuf:"bytes,11,rep,name=response_headers_to_remove,json=responseHeadersToRemove" json:"response_headers_to_remove,omitempty"`
+	ResponseHeadersToRemove []string `protobuf:"bytes,11,rep,name=response_headers_to_remove,json=responseHeadersToRemove,proto3" json:"response_headers_to_remove,omitempty"`
 	// Indicates that the virtual host has a CORS policy.
-	Cors *CorsPolicy `protobuf:"bytes,8,opt,name=cors" json:"cors,omitempty"`
+	Cors *CorsPolicy `protobuf:"bytes,8,opt,name=cors,proto3" json:"cors,omitempty"`
 	// The per_filter_config field can be used to provide virtual host-specific
 	// configurations for filters. The key should match the filter name, such as
 	// *envoy.buffer* for the HTTP buffer filter. Use of this field is filter
 	// specific; see the :ref:`HTTP filter documentation <config_http_filters>`
 	// for if and how it is utilized.
-	PerFilterConfig map[string]*types.Struct `protobuf:"bytes,12,rep,name=per_filter_config,json=perFilterConfig" json:"per_filter_config,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value"`
+	PerFilterConfig map[string]*types.Struct `protobuf:"bytes,12,rep,name=per_filter_config,json=perFilterConfig,proto3" json:"per_filter_config,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// Decides whether the :ref:`x-envoy-attempt-count
 	// <config_http_filters_router_x-envoy-attempt-count>` header should be included
 	// in the upstream request. Setting this option will cause it to override any existing header
@@ -336,7 +336,7 @@ func (m *VirtualHost) GetIncludeRequestAttemptCount() bool {
 // [#comment:next free field: 13]
 type Route struct {
 	// Route matching parameters.
-	Match RouteMatch `protobuf:"bytes,1,opt,name=match" json:"match"`
+	Match RouteMatch `protobuf:"bytes,1,opt,name=match,proto3" json:"match"`
 	// Types that are valid to be assigned to Action:
 	//	*Route_Route
 	//	*Route_Redirect
@@ -347,35 +347,35 @@ type Route struct {
 	// The metadata should go under the filter namespace that will need it.
 	// For instance, if the metadata is intended for the Router filter,
 	// the filter name should be specified as *envoy.router*.
-	Metadata *core.Metadata `protobuf:"bytes,4,opt,name=metadata" json:"metadata,omitempty"`
+	Metadata *core.Metadata `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	// Decorator for the matched route.
-	Decorator *Decorator `protobuf:"bytes,5,opt,name=decorator" json:"decorator,omitempty"`
+	Decorator *Decorator `protobuf:"bytes,5,opt,name=decorator,proto3" json:"decorator,omitempty"`
 	// The per_filter_config field can be used to provide route-specific
 	// configurations for filters. The key should match the filter name, such as
 	// *envoy.buffer* for the HTTP buffer filter. Use of this field is filter
 	// specific; see the :ref:`HTTP filter documentation <config_http_filters>` for
 	// if and how it is utilized.
-	PerFilterConfig map[string]*types.Struct `protobuf:"bytes,8,rep,name=per_filter_config,json=perFilterConfig" json:"per_filter_config,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value"`
+	PerFilterConfig map[string]*types.Struct `protobuf:"bytes,8,rep,name=per_filter_config,json=perFilterConfig,proto3" json:"per_filter_config,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// Specifies a set of headers that will be added to requests matching this
 	// route. Headers specified at this level are applied before headers from the
 	// enclosing :ref:`envoy_api_msg_route.VirtualHost` and
 	// :ref:`envoy_api_msg_RouteConfiguration`. For more information, including details on
 	// header value syntax, see the documentation on :ref:`custom request headers
 	// <config_http_conn_man_headers_custom_request_headers>`.
-	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,9,rep,name=request_headers_to_add,json=requestHeadersToAdd" json:"request_headers_to_add,omitempty"`
+	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,9,rep,name=request_headers_to_add,json=requestHeadersToAdd,proto3" json:"request_headers_to_add,omitempty"`
 	// Specifies a list of HTTP headers that should be removed from each request
 	// matching this route.
-	RequestHeadersToRemove []string `protobuf:"bytes,12,rep,name=request_headers_to_remove,json=requestHeadersToRemove" json:"request_headers_to_remove,omitempty"`
+	RequestHeadersToRemove []string `protobuf:"bytes,12,rep,name=request_headers_to_remove,json=requestHeadersToRemove,proto3" json:"request_headers_to_remove,omitempty"`
 	// Specifies a set of headers that will be added to responses to requests
 	// matching this route. Headers specified at this level are applied before
 	// headers from the enclosing :ref:`envoy_api_msg_route.VirtualHost` and
 	// :ref:`envoy_api_msg_RouteConfiguration`. For more information, including
 	// details on header value syntax, see the documentation on
 	// :ref:`custom request headers <config_http_conn_man_headers_custom_request_headers>`.
-	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,10,rep,name=response_headers_to_add,json=responseHeadersToAdd" json:"response_headers_to_add,omitempty"`
+	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,10,rep,name=response_headers_to_add,json=responseHeadersToAdd,proto3" json:"response_headers_to_add,omitempty"`
 	// Specifies a list of HTTP headers that should be removed from each response
 	// to requests matching this route.
-	ResponseHeadersToRemove []string `protobuf:"bytes,11,rep,name=response_headers_to_remove,json=responseHeadersToRemove" json:"response_headers_to_remove,omitempty"`
+	ResponseHeadersToRemove []string `protobuf:"bytes,11,rep,name=response_headers_to_remove,json=responseHeadersToRemove,proto3" json:"response_headers_to_remove,omitempty"`
 	XXX_NoUnkeyedLiteral    struct{} `json:"-"`
 	XXX_unrecognized        []byte   `json:"-"`
 	XXX_sizecache           int32    `json:"-"`
@@ -422,13 +422,13 @@ type isRoute_Action interface {
 }
 
 type Route_Route struct {
-	Route *RouteAction `protobuf:"bytes,2,opt,name=route,oneof"`
+	Route *RouteAction `protobuf:"bytes,2,opt,name=route,proto3,oneof"`
 }
 type Route_Redirect struct {
-	Redirect *RedirectAction `protobuf:"bytes,3,opt,name=redirect,oneof"`
+	Redirect *RedirectAction `protobuf:"bytes,3,opt,name=redirect,proto3,oneof"`
 }
 type Route_DirectResponse struct {
-	DirectResponse *DirectResponseAction `protobuf:"bytes,7,opt,name=direct_response,json=directResponse,oneof"`
+	DirectResponse *DirectResponseAction `protobuf:"bytes,7,opt,name=direct_response,json=directResponse,proto3,oneof"`
 }
 
 func (*Route_Route) isRoute_Action()          {}
@@ -621,10 +621,10 @@ func _Route_OneofSizer(msg proto.Message) (n int) {
 // [#comment:next free field: 10]
 type WeightedCluster struct {
 	// Specifies one or more upstream clusters associated with the route.
-	Clusters []*WeightedCluster_ClusterWeight `protobuf:"bytes,1,rep,name=clusters" json:"clusters,omitempty"`
+	Clusters []*WeightedCluster_ClusterWeight `protobuf:"bytes,1,rep,name=clusters,proto3" json:"clusters,omitempty"`
 	// Specifies the total weight across all clusters. The sum of all cluster weights must equal this
 	// value, which must be greater than 0. Defaults to 100.
-	TotalWeight *types.UInt32Value `protobuf:"bytes,3,opt,name=total_weight,json=totalWeight" json:"total_weight,omitempty"`
+	TotalWeight *types.UInt32Value `protobuf:"bytes,3,opt,name=total_weight,json=totalWeight,proto3" json:"total_weight,omitempty"`
 	// Specifies the runtime key prefix that should be used to construct the
 	// runtime keys associated with each cluster. When the *runtime_key_prefix* is
 	// specified, the router will look for weights associated with each upstream
@@ -701,13 +701,13 @@ type WeightedCluster_ClusterWeight struct {
 	// <envoy_api_field_route.WeightedCluster.total_weight>`. When a request matches the route,
 	// the choice of an upstream cluster is determined by its weight. The sum of weights across all
 	// entries in the clusters array must add up to the total_weight, which defaults to 100.
-	Weight *types.UInt32Value `protobuf:"bytes,2,opt,name=weight" json:"weight,omitempty"`
+	Weight *types.UInt32Value `protobuf:"bytes,2,opt,name=weight,proto3" json:"weight,omitempty"`
 	// Optional endpoint metadata match criteria used by the subset load balancer. Only endpoints in
 	// the upstream cluster with metadata matching what is set in this field will be considered for
 	// load balancing. Note that this will be merged with what's provided in :ref:
 	// `RouteAction.MetadataMatch <envoy_api_field_route.RouteAction.metadata_match>`, with values
 	// here taking precedence. The filter name should be specified as *envoy.lb*.
-	MetadataMatch *core.Metadata `protobuf:"bytes,3,opt,name=metadata_match,json=metadataMatch" json:"metadata_match,omitempty"`
+	MetadataMatch *core.Metadata `protobuf:"bytes,3,opt,name=metadata_match,json=metadataMatch,proto3" json:"metadata_match,omitempty"`
 	// Specifies a list of headers to be added to requests when this cluster is selected
 	// through the enclosing :ref:`envoy_api_msg_route.RouteAction`.
 	// Headers specified at this level are applied before headers from the enclosing
@@ -715,10 +715,10 @@ type WeightedCluster_ClusterWeight struct {
 	// :ref:`envoy_api_msg_RouteConfiguration`. For more information, including details on
 	// header value syntax, see the documentation on :ref:`custom request headers
 	// <config_http_conn_man_headers_custom_request_headers>`.
-	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,4,rep,name=request_headers_to_add,json=requestHeadersToAdd" json:"request_headers_to_add,omitempty"`
+	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,4,rep,name=request_headers_to_add,json=requestHeadersToAdd,proto3" json:"request_headers_to_add,omitempty"`
 	// Specifies a list of HTTP headers that should be removed from each request when
 	// this cluster is selected through the enclosing :ref:`envoy_api_msg_route.RouteAction`.
-	RequestHeadersToRemove []string `protobuf:"bytes,9,rep,name=request_headers_to_remove,json=requestHeadersToRemove" json:"request_headers_to_remove,omitempty"`
+	RequestHeadersToRemove []string `protobuf:"bytes,9,rep,name=request_headers_to_remove,json=requestHeadersToRemove,proto3" json:"request_headers_to_remove,omitempty"`
 	// Specifies a list of headers to be added to responses when this cluster is selected
 	// through the enclosing :ref:`envoy_api_msg_route.RouteAction`.
 	// Headers specified at this level are applied before headers from the enclosing
@@ -726,16 +726,16 @@ type WeightedCluster_ClusterWeight struct {
 	// :ref:`envoy_api_msg_RouteConfiguration`. For more information, including details on
 	// header value syntax, see the documentation on :ref:`custom request headers
 	// <config_http_conn_man_headers_custom_request_headers>`.
-	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,5,rep,name=response_headers_to_add,json=responseHeadersToAdd" json:"response_headers_to_add,omitempty"`
+	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,5,rep,name=response_headers_to_add,json=responseHeadersToAdd,proto3" json:"response_headers_to_add,omitempty"`
 	// Specifies a list of headers to be removed from responses when this cluster is selected
 	// through the enclosing :ref:`envoy_api_msg_route.RouteAction`.
-	ResponseHeadersToRemove []string `protobuf:"bytes,6,rep,name=response_headers_to_remove,json=responseHeadersToRemove" json:"response_headers_to_remove,omitempty"`
+	ResponseHeadersToRemove []string `protobuf:"bytes,6,rep,name=response_headers_to_remove,json=responseHeadersToRemove,proto3" json:"response_headers_to_remove,omitempty"`
 	// The per_filter_config field can be used to provide weighted cluster-specific
 	// configurations for filters. The key should match the filter name, such as
 	// *envoy.buffer* for the HTTP buffer filter. Use of this field is filter
 	// specific; see the :ref:`HTTP filter documentation <config_http_filters>`
 	// for if and how it is utilized.
-	PerFilterConfig      map[string]*types.Struct `protobuf:"bytes,8,rep,name=per_filter_config,json=perFilterConfig" json:"per_filter_config,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value"`
+	PerFilterConfig      map[string]*types.Struct `protobuf:"bytes,8,rep,name=per_filter_config,json=perFilterConfig,proto3" json:"per_filter_config,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
 	XXX_unrecognized     []byte                   `json:"-"`
 	XXX_sizecache        int32                    `json:"-"`
@@ -838,7 +838,7 @@ type RouteMatch struct {
 	PathSpecifier isRouteMatch_PathSpecifier `protobuf_oneof:"path_specifier"`
 	// Indicates that prefix/path matching should be case insensitive. The default
 	// is true.
-	CaseSensitive *types.BoolValue `protobuf:"bytes,4,opt,name=case_sensitive,json=caseSensitive" json:"case_sensitive,omitempty"`
+	CaseSensitive *types.BoolValue `protobuf:"bytes,4,opt,name=case_sensitive,json=caseSensitive,proto3" json:"case_sensitive,omitempty"`
 	// Indicates that the route should additionally match on a runtime key. Every time the route
 	// is considered for a match, it must also fall under the percentage of matches indicated by
 	// this field. For some fraction N/D, a random number in the range [0,D) is selected. If the
@@ -855,23 +855,23 @@ type RouteMatch struct {
 	//    integer with the assumption that the value is an integral percentage out of 100. For
 	//    instance, a runtime key lookup returning the value "42" would parse as a FractionalPercent
 	//    whose numerator is 42 and denominator is HUNDRED. This preserves legacy semantics.
-	RuntimeFraction *core.RuntimeFractionalPercent `protobuf:"bytes,9,opt,name=runtime_fraction,json=runtimeFraction" json:"runtime_fraction,omitempty"`
+	RuntimeFraction *core.RuntimeFractionalPercent `protobuf:"bytes,9,opt,name=runtime_fraction,json=runtimeFraction,proto3" json:"runtime_fraction,omitempty"`
 	// Specifies a set of headers that the route should match on. The router will
 	// check the request’s headers against all the specified headers in the route
 	// config. A match will happen if all the headers in the route are present in
 	// the request with the same values (or based on presence if the value field
 	// is not in the config).
-	Headers []*HeaderMatcher `protobuf:"bytes,6,rep,name=headers" json:"headers,omitempty"`
+	Headers []*HeaderMatcher `protobuf:"bytes,6,rep,name=headers,proto3" json:"headers,omitempty"`
 	// Specifies a set of URL query parameters on which the route should
 	// match. The router will check the query string from the *path* header
 	// against all the specified query parameters. If the number of specified
 	// query parameters is nonzero, they all must match the *path* header's
 	// query string for a match to occur.
-	QueryParameters []*QueryParameterMatcher `protobuf:"bytes,7,rep,name=query_parameters,json=queryParameters" json:"query_parameters,omitempty"`
+	QueryParameters []*QueryParameterMatcher `protobuf:"bytes,7,rep,name=query_parameters,json=queryParameters,proto3" json:"query_parameters,omitempty"`
 	// If specified, only gRPC requests will be matched. The router will check
 	// that the content-type header has a application/grpc or one of the various
 	// application/grpc+ values.
-	Grpc                 *RouteMatch_GrpcRouteMatchOptions `protobuf:"bytes,8,opt,name=grpc" json:"grpc,omitempty"`
+	Grpc                 *RouteMatch_GrpcRouteMatchOptions `protobuf:"bytes,8,opt,name=grpc,proto3" json:"grpc,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                          `json:"-"`
 	XXX_unrecognized     []byte                            `json:"-"`
 	XXX_sizecache        int32                             `json:"-"`
@@ -1119,11 +1119,11 @@ type CorsPolicy struct {
 	// Specifies the origins that will be allowed to do CORS requests.
 	//
 	// An origin is allowed if either allow_origin or allow_origin_regex match.
-	AllowOrigin []string `protobuf:"bytes,1,rep,name=allow_origin,json=allowOrigin" json:"allow_origin,omitempty"`
+	AllowOrigin []string `protobuf:"bytes,1,rep,name=allow_origin,json=allowOrigin,proto3" json:"allow_origin,omitempty"`
 	// Specifies regex patterns that match allowed origins.
 	//
 	// An origin is allowed if either allow_origin or allow_origin_regex match.
-	AllowOriginRegex []string `protobuf:"bytes,8,rep,name=allow_origin_regex,json=allowOriginRegex" json:"allow_origin_regex,omitempty"`
+	AllowOriginRegex []string `protobuf:"bytes,8,rep,name=allow_origin_regex,json=allowOriginRegex,proto3" json:"allow_origin_regex,omitempty"`
 	// Specifies the content for the *access-control-allow-methods* header.
 	AllowMethods string `protobuf:"bytes,2,opt,name=allow_methods,json=allowMethods,proto3" json:"allow_methods,omitempty"`
 	// Specifies the content for the *access-control-allow-headers* header.
@@ -1133,9 +1133,9 @@ type CorsPolicy struct {
 	// Specifies the content for the *access-control-max-age* header.
 	MaxAge string `protobuf:"bytes,5,opt,name=max_age,json=maxAge,proto3" json:"max_age,omitempty"`
 	// Specifies whether the resource allows credentials.
-	AllowCredentials *types.BoolValue `protobuf:"bytes,6,opt,name=allow_credentials,json=allowCredentials" json:"allow_credentials,omitempty"`
+	AllowCredentials *types.BoolValue `protobuf:"bytes,6,opt,name=allow_credentials,json=allowCredentials,proto3" json:"allow_credentials,omitempty"`
 	// Specifies if CORS is enabled. Defaults to true. Only effective on route.
-	Enabled              *types.BoolValue `protobuf:"bytes,7,opt,name=enabled" json:"enabled,omitempty"`
+	Enabled              *types.BoolValue `protobuf:"bytes,7,opt,name=enabled,proto3" json:"enabled,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -1245,7 +1245,7 @@ type RouteAction struct {
 	// for load balancing. If using :ref:`weighted_clusters
 	// <envoy_api_field_route.RouteAction.weighted_clusters>`, metadata will be merged, with values
 	// provided there taking precedence. The filter name should be specified as *envoy.lb*.
-	MetadataMatch *core.Metadata `protobuf:"bytes,4,opt,name=metadata_match,json=metadataMatch" json:"metadata_match,omitempty"`
+	MetadataMatch *core.Metadata `protobuf:"bytes,4,opt,name=metadata_match,json=metadataMatch,proto3" json:"metadata_match,omitempty"`
 	// Indicates that during forwarding, the matched prefix (or path) should be
 	// swapped with this value. This option allows application URLs to be rooted
 	// at a different path from those exposed at the reverse proxy layer. The router filter will
@@ -1288,7 +1288,7 @@ type RouteAction struct {
 	//   :ref:`config_http_filters_router_x-envoy-upstream-rq-timeout-ms`,
 	//   :ref:`config_http_filters_router_x-envoy-upstream-rq-per-try-timeout-ms`, and the
 	//   :ref:`retry overview <arch_overview_http_routing_retry>`.
-	Timeout *time.Duration `protobuf:"bytes,8,opt,name=timeout,stdduration" json:"timeout,omitempty"`
+	Timeout *time.Duration `protobuf:"bytes,8,opt,name=timeout,proto3,stdduration" json:"timeout,omitempty"`
 	// Specifies the idle timeout for the route. If not specified, there is no per-route idle timeout,
 	// although the connection manager wide :ref:`stream_idle_timeout
 	// <envoy_api_field_config.filter.network.http_connection_manager.v2.HttpConnectionManager.stream_idle_timeout>`
@@ -1307,29 +1307,29 @@ type RouteAction struct {
 	// fires, the stream is terminated with a 408 Request Timeout error code if no
 	// upstream response header has been received, otherwise a stream reset
 	// occurs.
-	IdleTimeout *time.Duration `protobuf:"bytes,24,opt,name=idle_timeout,json=idleTimeout,stdduration" json:"idle_timeout,omitempty"`
+	IdleTimeout *time.Duration `protobuf:"bytes,24,opt,name=idle_timeout,json=idleTimeout,proto3,stdduration" json:"idle_timeout,omitempty"`
 	// Indicates that the route has a retry policy.
-	RetryPolicy *RouteAction_RetryPolicy `protobuf:"bytes,9,opt,name=retry_policy,json=retryPolicy" json:"retry_policy,omitempty"`
+	RetryPolicy *RouteAction_RetryPolicy `protobuf:"bytes,9,opt,name=retry_policy,json=retryPolicy,proto3" json:"retry_policy,omitempty"`
 	// Indicates that the route has a request mirroring policy.
-	RequestMirrorPolicy *RouteAction_RequestMirrorPolicy `protobuf:"bytes,10,opt,name=request_mirror_policy,json=requestMirrorPolicy" json:"request_mirror_policy,omitempty"`
+	RequestMirrorPolicy *RouteAction_RequestMirrorPolicy `protobuf:"bytes,10,opt,name=request_mirror_policy,json=requestMirrorPolicy,proto3" json:"request_mirror_policy,omitempty"`
 	// Optionally specifies the :ref:`routing priority <arch_overview_http_routing_priority>`.
 	// [#comment:TODO(htuch): add (validate.rules).enum.defined_only = true once
 	// https://github.com/lyft/protoc-gen-validate/issues/42 is resolved.]
 	Priority core.RoutingPriority `protobuf:"varint,11,opt,name=priority,proto3,enum=envoy.api.v2.core.RoutingPriority" json:"priority,omitempty"`
 	// [#not-implemented-hide:]
-	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,12,rep,name=request_headers_to_add,json=requestHeadersToAdd" json:"request_headers_to_add,omitempty"` // Deprecated: Do not use.
+	RequestHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,12,rep,name=request_headers_to_add,json=requestHeadersToAdd,proto3" json:"request_headers_to_add,omitempty"` // Deprecated: Do not use.
 	// [#not-implemented-hide:]
-	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,18,rep,name=response_headers_to_add,json=responseHeadersToAdd" json:"response_headers_to_add,omitempty"` // Deprecated: Do not use.
+	ResponseHeadersToAdd []*core.HeaderValueOption `protobuf:"bytes,18,rep,name=response_headers_to_add,json=responseHeadersToAdd,proto3" json:"response_headers_to_add,omitempty"` // Deprecated: Do not use.
 	// [#not-implemented-hide:]
-	ResponseHeadersToRemove []string `protobuf:"bytes,19,rep,name=response_headers_to_remove,json=responseHeadersToRemove" json:"response_headers_to_remove,omitempty"` // Deprecated: Do not use.
+	ResponseHeadersToRemove []string `protobuf:"bytes,19,rep,name=response_headers_to_remove,json=responseHeadersToRemove,proto3" json:"response_headers_to_remove,omitempty"` // Deprecated: Do not use.
 	// Specifies a set of rate limit configurations that could be applied to the
 	// route.
-	RateLimits []*RateLimit `protobuf:"bytes,13,rep,name=rate_limits,json=rateLimits" json:"rate_limits,omitempty"`
+	RateLimits []*RateLimit `protobuf:"bytes,13,rep,name=rate_limits,json=rateLimits,proto3" json:"rate_limits,omitempty"`
 	// Specifies if the rate limit filter should include the virtual host rate
 	// limits. By default, if the route configured rate limits, the virtual host
 	// :ref:`rate_limits <envoy_api_field_route.VirtualHost.rate_limits>` are not applied to the
 	// request.
-	IncludeVhRateLimits *types.BoolValue `protobuf:"bytes,14,opt,name=include_vh_rate_limits,json=includeVhRateLimits" json:"include_vh_rate_limits,omitempty"`
+	IncludeVhRateLimits *types.BoolValue `protobuf:"bytes,14,opt,name=include_vh_rate_limits,json=includeVhRateLimits,proto3" json:"include_vh_rate_limits,omitempty"`
 	// Specifies a list of hash policies to use for ring hash load balancing. Each
 	// hash policy is evaluated individually and the combined result is used to
 	// route the request. The method of combination is deterministic such that
@@ -1342,9 +1342,9 @@ type RouteAction struct {
 	// backend). If a hash policy has the "terminal" attribute set to true, and
 	// there is already a hash generated, the hash is returned immediately,
 	// ignoring the rest of the hash policy list.
-	HashPolicy []*RouteAction_HashPolicy `protobuf:"bytes,15,rep,name=hash_policy,json=hashPolicy" json:"hash_policy,omitempty"`
+	HashPolicy []*RouteAction_HashPolicy `protobuf:"bytes,15,rep,name=hash_policy,json=hashPolicy,proto3" json:"hash_policy,omitempty"`
 	// Indicates that the route has a CORS policy.
-	Cors *CorsPolicy `protobuf:"bytes,17,opt,name=cors" json:"cors,omitempty"`
+	Cors *CorsPolicy `protobuf:"bytes,17,opt,name=cors,proto3" json:"cors,omitempty"`
 	// If present, and the request is a gRPC request, use the
 	// `grpc-timeout header <https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md>`_,
 	// or its default value (infinity) instead of
@@ -1355,7 +1355,7 @@ type RouteAction struct {
 	// :ref:`timeout <envoy_api_field_route.RouteAction.timeout>` or its default.
 	// This can be used to prevent unexpected upstream request timeouts due to potentially long
 	// time gaps between gRPC request and response in gRPC streaming mode.
-	MaxGrpcTimeout       *time.Duration `protobuf:"bytes,23,opt,name=max_grpc_timeout,json=maxGrpcTimeout,stdduration" json:"max_grpc_timeout,omitempty"`
+	MaxGrpcTimeout       *time.Duration `protobuf:"bytes,23,opt,name=max_grpc_timeout,json=maxGrpcTimeout,proto3,stdduration" json:"max_grpc_timeout,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
 	XXX_unrecognized     []byte         `json:"-"`
 	XXX_sizecache        int32          `json:"-"`
@@ -1414,13 +1414,13 @@ type RouteAction_ClusterHeader struct {
 	ClusterHeader string `protobuf:"bytes,2,opt,name=cluster_header,json=clusterHeader,proto3,oneof"`
 }
 type RouteAction_WeightedClusters struct {
-	WeightedClusters *WeightedCluster `protobuf:"bytes,3,opt,name=weighted_clusters,json=weightedClusters,oneof"`
+	WeightedClusters *WeightedCluster `protobuf:"bytes,3,opt,name=weighted_clusters,json=weightedClusters,proto3,oneof"`
 }
 type RouteAction_HostRewrite struct {
 	HostRewrite string `protobuf:"bytes,6,opt,name=host_rewrite,json=hostRewrite,proto3,oneof"`
 }
 type RouteAction_AutoHostRewrite struct {
-	AutoHostRewrite *types.BoolValue `protobuf:"bytes,7,opt,name=auto_host_rewrite,json=autoHostRewrite,oneof"`
+	AutoHostRewrite *types.BoolValue `protobuf:"bytes,7,opt,name=auto_host_rewrite,json=autoHostRewrite,proto3,oneof"`
 }
 
 func (*RouteAction_Cluster) isRouteAction_ClusterSpecifier()             {}
@@ -1732,7 +1732,7 @@ type RouteAction_RetryPolicy struct {
 	// Specifies the allowed number of retries. This parameter is optional and
 	// defaults to 1. These are the same conditions documented for
 	// :ref:`config_http_filters_router_x-envoy-max-retries`.
-	NumRetries *types.UInt32Value `protobuf:"bytes,2,opt,name=num_retries,json=numRetries" json:"num_retries,omitempty"`
+	NumRetries *types.UInt32Value `protobuf:"bytes,2,opt,name=num_retries,json=numRetries,proto3" json:"num_retries,omitempty"`
 	// Specifies a non-zero upstream timeout per retry attempt. This parameter is optional. The
 	// same conditions documented for
 	// :ref:`config_http_filters_router_x-envoy-upstream-rq-per-try-timeout-ms` apply.
@@ -1744,22 +1744,22 @@ type RouteAction_RetryPolicy struct {
 	//   Consequently, when using a :ref:`5xx <config_http_filters_router_x-envoy-retry-on>` based
 	//   retry policy, a request that times out will not be retried as the total timeout budget
 	//   would have been exhausted.
-	PerTryTimeout *time.Duration `protobuf:"bytes,3,opt,name=per_try_timeout,json=perTryTimeout,stdduration" json:"per_try_timeout,omitempty"`
+	PerTryTimeout *time.Duration `protobuf:"bytes,3,opt,name=per_try_timeout,json=perTryTimeout,proto3,stdduration" json:"per_try_timeout,omitempty"`
 	// Specifies an implementation of a RetryPriority which is used to determine the
 	// distribution of load across priorities used for retries. Refer to
 	// :ref:`retry plugin configuration <arch_overview_http_retry_plugins>` for more details.
-	RetryPriority *RouteAction_RetryPolicy_RetryPriority `protobuf:"bytes,4,opt,name=retry_priority,json=retryPriority" json:"retry_priority,omitempty"`
+	RetryPriority *RouteAction_RetryPolicy_RetryPriority `protobuf:"bytes,4,opt,name=retry_priority,json=retryPriority,proto3" json:"retry_priority,omitempty"`
 	// Specifies a collection of RetryHostPredicates that will be consulted when selecting a host
 	// for retries. If any of the predicates reject the host, host selection will be reattempted.
 	// Refer to :ref:`retry plugin configuration <arch_overview_http_retry_plugins>` for more
 	// details.
-	RetryHostPredicate []*RouteAction_RetryPolicy_RetryHostPredicate `protobuf:"bytes,5,rep,name=retry_host_predicate,json=retryHostPredicate" json:"retry_host_predicate,omitempty"`
+	RetryHostPredicate []*RouteAction_RetryPolicy_RetryHostPredicate `protobuf:"bytes,5,rep,name=retry_host_predicate,json=retryHostPredicate,proto3" json:"retry_host_predicate,omitempty"`
 	// The maximum number of times host selection will be reattempted before giving up, at which
 	// point the host that was last selected will be routed to. If unspecified, this will default to
 	// retrying once.
 	HostSelectionRetryMaxAttempts int64 `protobuf:"varint,6,opt,name=host_selection_retry_max_attempts,json=hostSelectionRetryMaxAttempts,proto3" json:"host_selection_retry_max_attempts,omitempty"`
 	// HTTP status codes that should trigger a retry in addition to those specified by retry_on.
-	RetriableStatusCodes []uint32 `protobuf:"varint,7,rep,packed,name=retriable_status_codes,json=retriableStatusCodes" json:"retriable_status_codes,omitempty"`
+	RetriableStatusCodes []uint32 `protobuf:"varint,7,rep,packed,name=retriable_status_codes,json=retriableStatusCodes,proto3" json:"retriable_status_codes,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1849,7 +1849,7 @@ func (m *RouteAction_RetryPolicy) GetRetriableStatusCodes() []uint32 {
 
 type RouteAction_RetryPolicy_RetryPriority struct {
 	Name                 string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Config               *types.Struct `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
+	Config               *types.Struct `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -1904,7 +1904,7 @@ func (m *RouteAction_RetryPolicy_RetryPriority) GetConfig() *types.Struct {
 
 type RouteAction_RetryPolicy_RetryHostPredicate struct {
 	Name                 string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Config               *types.Struct `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
+	Config               *types.Struct `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -2105,13 +2105,13 @@ type isRouteAction_HashPolicy_PolicySpecifier interface {
 }
 
 type RouteAction_HashPolicy_Header_ struct {
-	Header *RouteAction_HashPolicy_Header `protobuf:"bytes,1,opt,name=header,oneof"`
+	Header *RouteAction_HashPolicy_Header `protobuf:"bytes,1,opt,name=header,proto3,oneof"`
 }
 type RouteAction_HashPolicy_Cookie_ struct {
-	Cookie *RouteAction_HashPolicy_Cookie `protobuf:"bytes,2,opt,name=cookie,oneof"`
+	Cookie *RouteAction_HashPolicy_Cookie `protobuf:"bytes,2,opt,name=cookie,proto3,oneof"`
 }
 type RouteAction_HashPolicy_ConnectionProperties_ struct {
-	ConnectionProperties *RouteAction_HashPolicy_ConnectionProperties `protobuf:"bytes,3,opt,name=connection_properties,json=connectionProperties,oneof"`
+	ConnectionProperties *RouteAction_HashPolicy_ConnectionProperties `protobuf:"bytes,3,opt,name=connection_properties,json=connectionProperties,proto3,oneof"`
 }
 
 func (*RouteAction_HashPolicy_Header_) isRouteAction_HashPolicy_PolicySpecifier()               {}
@@ -2317,7 +2317,7 @@ type RouteAction_HashPolicy_Cookie struct {
 	// If specified, a cookie with the TTL will be generated if the cookie is
 	// not present. If the TTL is present and zero, the generated cookie will
 	// be a session cookie.
-	Ttl *time.Duration `protobuf:"bytes,2,opt,name=ttl,stdduration" json:"ttl,omitempty"`
+	Ttl *time.Duration `protobuf:"bytes,2,opt,name=ttl,proto3,stdduration" json:"ttl,omitempty"`
 	// The name of the path for the cookie. If no path is specified here, no path
 	// will be set for the cookie.
 	Path                 string   `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`
@@ -2717,7 +2717,7 @@ type DirectResponseAction struct {
 	//   Headers can be specified using *response_headers_to_add* in the enclosing
 	//   :ref:`envoy_api_msg_route.Route`, :ref:`envoy_api_msg_RouteConfiguration` or
 	//   :ref:`envoy_api_msg_route.VirtualHost`.
-	Body                 *core.DataSource `protobuf:"bytes,2,opt,name=body" json:"body,omitempty"`
+	Body                 *core.DataSource `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -2930,7 +2930,7 @@ type RateLimit struct {
 	// .. note::
 	//
 	//   The filter supports a range of 0 - 10 inclusively for stage numbers.
-	Stage *types.UInt32Value `protobuf:"bytes,1,opt,name=stage" json:"stage,omitempty"`
+	Stage *types.UInt32Value `protobuf:"bytes,1,opt,name=stage,proto3" json:"stage,omitempty"`
 	// The key to be set in runtime to disable this rate limit configuration.
 	DisableKey string `protobuf:"bytes,2,opt,name=disable_key,json=disableKey,proto3" json:"disable_key,omitempty"`
 	// A list of actions that are to be applied for this rate limit configuration.
@@ -2939,7 +2939,7 @@ type RateLimit struct {
 	// cannot append a descriptor entry, no descriptor is generated for the
 	// configuration. See :ref:`composing actions
 	// <config_http_filters_rate_limit_composing_actions>` for additional documentation.
-	Actions              []*RateLimit_Action `protobuf:"bytes,3,rep,name=actions" json:"actions,omitempty"`
+	Actions              []*RateLimit_Action `protobuf:"bytes,3,rep,name=actions,proto3" json:"actions,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
 	XXX_unrecognized     []byte              `json:"-"`
 	XXX_sizecache        int32               `json:"-"`
@@ -3054,22 +3054,22 @@ type isRateLimit_Action_ActionSpecifier interface {
 }
 
 type RateLimit_Action_SourceCluster_ struct {
-	SourceCluster *RateLimit_Action_SourceCluster `protobuf:"bytes,1,opt,name=source_cluster,json=sourceCluster,oneof"`
+	SourceCluster *RateLimit_Action_SourceCluster `protobuf:"bytes,1,opt,name=source_cluster,json=sourceCluster,proto3,oneof"`
 }
 type RateLimit_Action_DestinationCluster_ struct {
-	DestinationCluster *RateLimit_Action_DestinationCluster `protobuf:"bytes,2,opt,name=destination_cluster,json=destinationCluster,oneof"`
+	DestinationCluster *RateLimit_Action_DestinationCluster `protobuf:"bytes,2,opt,name=destination_cluster,json=destinationCluster,proto3,oneof"`
 }
 type RateLimit_Action_RequestHeaders_ struct {
-	RequestHeaders *RateLimit_Action_RequestHeaders `protobuf:"bytes,3,opt,name=request_headers,json=requestHeaders,oneof"`
+	RequestHeaders *RateLimit_Action_RequestHeaders `protobuf:"bytes,3,opt,name=request_headers,json=requestHeaders,proto3,oneof"`
 }
 type RateLimit_Action_RemoteAddress_ struct {
-	RemoteAddress *RateLimit_Action_RemoteAddress `protobuf:"bytes,4,opt,name=remote_address,json=remoteAddress,oneof"`
+	RemoteAddress *RateLimit_Action_RemoteAddress `protobuf:"bytes,4,opt,name=remote_address,json=remoteAddress,proto3,oneof"`
 }
 type RateLimit_Action_GenericKey_ struct {
-	GenericKey *RateLimit_Action_GenericKey `protobuf:"bytes,5,opt,name=generic_key,json=genericKey,oneof"`
+	GenericKey *RateLimit_Action_GenericKey `protobuf:"bytes,5,opt,name=generic_key,json=genericKey,proto3,oneof"`
 }
 type RateLimit_Action_HeaderValueMatch_ struct {
-	HeaderValueMatch *RateLimit_Action_HeaderValueMatch `protobuf:"bytes,6,opt,name=header_value_match,json=headerValueMatch,oneof"`
+	HeaderValueMatch *RateLimit_Action_HeaderValueMatch `protobuf:"bytes,6,opt,name=header_value_match,json=headerValueMatch,proto3,oneof"`
 }
 
 func (*RateLimit_Action_SourceCluster_) isRateLimit_Action_ActionSpecifier()      {}
@@ -3554,13 +3554,13 @@ type RateLimit_Action_HeaderValueMatch struct {
 	// request matches the headers. If set to false, the action will append a
 	// descriptor entry when the request does not match the headers. The
 	// default value is true.
-	ExpectMatch *types.BoolValue `protobuf:"bytes,2,opt,name=expect_match,json=expectMatch" json:"expect_match,omitempty"`
+	ExpectMatch *types.BoolValue `protobuf:"bytes,2,opt,name=expect_match,json=expectMatch,proto3" json:"expect_match,omitempty"`
 	// Specifies a set of headers that the rate limit action should match
 	// on. The action will check the request’s headers against all the
 	// specified headers in the config. A match will happen if all the
 	// headers in the config are present in the request with the same values
 	// (or based on presence if the value field is not in the config).
-	Headers              []*HeaderMatcher `protobuf:"bytes,3,rep,name=headers" json:"headers,omitempty"`
+	Headers              []*HeaderMatcher `protobuf:"bytes,3,rep,name=headers,proto3" json:"headers,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -3715,7 +3715,7 @@ type HeaderMatcher_RegexMatch struct {
 	RegexMatch string `protobuf:"bytes,5,opt,name=regex_match,json=regexMatch,proto3,oneof"`
 }
 type HeaderMatcher_RangeMatch struct {
-	RangeMatch *_type.Int64Range `protobuf:"bytes,6,opt,name=range_match,json=rangeMatch,oneof"`
+	RangeMatch *_type.Int64Range `protobuf:"bytes,6,opt,name=range_match,json=rangeMatch,proto3,oneof"`
 }
 type HeaderMatcher_PresentMatch struct {
 	PresentMatch bool `protobuf:"varint,7,opt,name=present_match,json=presentMatch,proto3,oneof"`
@@ -3944,7 +3944,7 @@ type QueryParameterMatcher struct {
 	// Defaults to false. The entire query parameter value (i.e., the part to
 	// the right of the equals sign in "key=value") must match the regex.
 	// E.g., the regex "\d+$" will match "123" but not "a123" or "123a".
-	Regex                *types.BoolValue `protobuf:"bytes,4,opt,name=regex" json:"regex,omitempty"`
+	Regex                *types.BoolValue `protobuf:"bytes,4,opt,name=regex,proto3" json:"regex,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -8158,6 +8158,9 @@ func encodeVarintRoute(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *VirtualHost) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -8242,6 +8245,9 @@ func (m *VirtualHost) Size() (n int) {
 }
 
 func (m *Route) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = m.Match.Size()
@@ -8301,6 +8307,9 @@ func (m *Route) Size() (n int) {
 }
 
 func (m *Route_Route) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Route != nil {
@@ -8310,6 +8319,9 @@ func (m *Route_Route) Size() (n int) {
 	return n
 }
 func (m *Route_Redirect) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Redirect != nil {
@@ -8319,6 +8331,9 @@ func (m *Route_Redirect) Size() (n int) {
 	return n
 }
 func (m *Route_DirectResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.DirectResponse != nil {
@@ -8328,6 +8343,9 @@ func (m *Route_DirectResponse) Size() (n int) {
 	return n
 }
 func (m *WeightedCluster) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Clusters) > 0 {
@@ -8351,6 +8369,9 @@ func (m *WeightedCluster) Size() (n int) {
 }
 
 func (m *WeightedCluster_ClusterWeight) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -8409,6 +8430,9 @@ func (m *WeightedCluster_ClusterWeight) Size() (n int) {
 }
 
 func (m *RouteMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.PathSpecifier != nil {
@@ -8445,6 +8469,9 @@ func (m *RouteMatch) Size() (n int) {
 }
 
 func (m *RouteMatch_Prefix) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Prefix)
@@ -8452,6 +8479,9 @@ func (m *RouteMatch_Prefix) Size() (n int) {
 	return n
 }
 func (m *RouteMatch_Path) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Path)
@@ -8459,6 +8489,9 @@ func (m *RouteMatch_Path) Size() (n int) {
 	return n
 }
 func (m *RouteMatch_Regex) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Regex)
@@ -8466,6 +8499,9 @@ func (m *RouteMatch_Regex) Size() (n int) {
 	return n
 }
 func (m *RouteMatch_GrpcRouteMatchOptions) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.XXX_unrecognized != nil {
@@ -8475,6 +8511,9 @@ func (m *RouteMatch_GrpcRouteMatchOptions) Size() (n int) {
 }
 
 func (m *CorsPolicy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.AllowOrigin) > 0 {
@@ -8520,6 +8559,9 @@ func (m *CorsPolicy) Size() (n int) {
 }
 
 func (m *RouteAction) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ClusterSpecifier != nil {
@@ -8607,6 +8649,9 @@ func (m *RouteAction) Size() (n int) {
 }
 
 func (m *RouteAction_Cluster) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Cluster)
@@ -8614,6 +8659,9 @@ func (m *RouteAction_Cluster) Size() (n int) {
 	return n
 }
 func (m *RouteAction_ClusterHeader) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.ClusterHeader)
@@ -8621,6 +8669,9 @@ func (m *RouteAction_ClusterHeader) Size() (n int) {
 	return n
 }
 func (m *RouteAction_WeightedClusters) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.WeightedClusters != nil {
@@ -8630,6 +8681,9 @@ func (m *RouteAction_WeightedClusters) Size() (n int) {
 	return n
 }
 func (m *RouteAction_HostRewrite) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.HostRewrite)
@@ -8637,6 +8691,9 @@ func (m *RouteAction_HostRewrite) Size() (n int) {
 	return n
 }
 func (m *RouteAction_AutoHostRewrite) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.AutoHostRewrite != nil {
@@ -8646,6 +8703,9 @@ func (m *RouteAction_AutoHostRewrite) Size() (n int) {
 	return n
 }
 func (m *RouteAction_RetryPolicy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.RetryOn)
@@ -8687,6 +8747,9 @@ func (m *RouteAction_RetryPolicy) Size() (n int) {
 }
 
 func (m *RouteAction_RetryPolicy_RetryPriority) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -8704,6 +8767,9 @@ func (m *RouteAction_RetryPolicy_RetryPriority) Size() (n int) {
 }
 
 func (m *RouteAction_RetryPolicy_RetryHostPredicate) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -8721,6 +8787,9 @@ func (m *RouteAction_RetryPolicy_RetryHostPredicate) Size() (n int) {
 }
 
 func (m *RouteAction_RequestMirrorPolicy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Cluster)
@@ -8738,6 +8807,9 @@ func (m *RouteAction_RequestMirrorPolicy) Size() (n int) {
 }
 
 func (m *RouteAction_HashPolicy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.PolicySpecifier != nil {
@@ -8753,6 +8825,9 @@ func (m *RouteAction_HashPolicy) Size() (n int) {
 }
 
 func (m *RouteAction_HashPolicy_Header_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Header != nil {
@@ -8762,6 +8837,9 @@ func (m *RouteAction_HashPolicy_Header_) Size() (n int) {
 	return n
 }
 func (m *RouteAction_HashPolicy_Cookie_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Cookie != nil {
@@ -8771,6 +8849,9 @@ func (m *RouteAction_HashPolicy_Cookie_) Size() (n int) {
 	return n
 }
 func (m *RouteAction_HashPolicy_ConnectionProperties_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ConnectionProperties != nil {
@@ -8780,6 +8861,9 @@ func (m *RouteAction_HashPolicy_ConnectionProperties_) Size() (n int) {
 	return n
 }
 func (m *RouteAction_HashPolicy_Header) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.HeaderName)
@@ -8793,6 +8877,9 @@ func (m *RouteAction_HashPolicy_Header) Size() (n int) {
 }
 
 func (m *RouteAction_HashPolicy_Cookie) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -8814,6 +8901,9 @@ func (m *RouteAction_HashPolicy_Cookie) Size() (n int) {
 }
 
 func (m *RouteAction_HashPolicy_ConnectionProperties) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.SourceIp {
@@ -8826,6 +8916,9 @@ func (m *RouteAction_HashPolicy_ConnectionProperties) Size() (n int) {
 }
 
 func (m *RedirectAction) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.HostRedirect)
@@ -8854,6 +8947,9 @@ func (m *RedirectAction) Size() (n int) {
 }
 
 func (m *RedirectAction_PathRedirect) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.PathRedirect)
@@ -8861,12 +8957,18 @@ func (m *RedirectAction_PathRedirect) Size() (n int) {
 	return n
 }
 func (m *RedirectAction_HttpsRedirect) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	n += 2
 	return n
 }
 func (m *RedirectAction_PrefixRewrite) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.PrefixRewrite)
@@ -8874,6 +8976,9 @@ func (m *RedirectAction_PrefixRewrite) Size() (n int) {
 	return n
 }
 func (m *RedirectAction_SchemeRedirect) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SchemeRedirect)
@@ -8881,6 +8986,9 @@ func (m *RedirectAction_SchemeRedirect) Size() (n int) {
 	return n
 }
 func (m *DirectResponseAction) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Status != 0 {
@@ -8897,6 +9005,9 @@ func (m *DirectResponseAction) Size() (n int) {
 }
 
 func (m *Decorator) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Operation)
@@ -8910,6 +9021,9 @@ func (m *Decorator) Size() (n int) {
 }
 
 func (m *VirtualCluster) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Pattern)
@@ -8930,6 +9044,9 @@ func (m *VirtualCluster) Size() (n int) {
 }
 
 func (m *RateLimit) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Stage != nil {
@@ -8953,6 +9070,9 @@ func (m *RateLimit) Size() (n int) {
 }
 
 func (m *RateLimit_Action) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ActionSpecifier != nil {
@@ -8965,6 +9085,9 @@ func (m *RateLimit_Action) Size() (n int) {
 }
 
 func (m *RateLimit_Action_SourceCluster_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.SourceCluster != nil {
@@ -8974,6 +9097,9 @@ func (m *RateLimit_Action_SourceCluster_) Size() (n int) {
 	return n
 }
 func (m *RateLimit_Action_DestinationCluster_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.DestinationCluster != nil {
@@ -8983,6 +9109,9 @@ func (m *RateLimit_Action_DestinationCluster_) Size() (n int) {
 	return n
 }
 func (m *RateLimit_Action_RequestHeaders_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.RequestHeaders != nil {
@@ -8992,6 +9121,9 @@ func (m *RateLimit_Action_RequestHeaders_) Size() (n int) {
 	return n
 }
 func (m *RateLimit_Action_RemoteAddress_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.RemoteAddress != nil {
@@ -9001,6 +9133,9 @@ func (m *RateLimit_Action_RemoteAddress_) Size() (n int) {
 	return n
 }
 func (m *RateLimit_Action_GenericKey_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.GenericKey != nil {
@@ -9010,6 +9145,9 @@ func (m *RateLimit_Action_GenericKey_) Size() (n int) {
 	return n
 }
 func (m *RateLimit_Action_HeaderValueMatch_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.HeaderValueMatch != nil {
@@ -9019,6 +9157,9 @@ func (m *RateLimit_Action_HeaderValueMatch_) Size() (n int) {
 	return n
 }
 func (m *RateLimit_Action_SourceCluster) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.XXX_unrecognized != nil {
@@ -9028,6 +9169,9 @@ func (m *RateLimit_Action_SourceCluster) Size() (n int) {
 }
 
 func (m *RateLimit_Action_DestinationCluster) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.XXX_unrecognized != nil {
@@ -9037,6 +9181,9 @@ func (m *RateLimit_Action_DestinationCluster) Size() (n int) {
 }
 
 func (m *RateLimit_Action_RequestHeaders) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.HeaderName)
@@ -9054,6 +9201,9 @@ func (m *RateLimit_Action_RequestHeaders) Size() (n int) {
 }
 
 func (m *RateLimit_Action_RemoteAddress) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.XXX_unrecognized != nil {
@@ -9063,6 +9213,9 @@ func (m *RateLimit_Action_RemoteAddress) Size() (n int) {
 }
 
 func (m *RateLimit_Action_GenericKey) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.DescriptorValue)
@@ -9076,6 +9229,9 @@ func (m *RateLimit_Action_GenericKey) Size() (n int) {
 }
 
 func (m *RateLimit_Action_HeaderValueMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.DescriptorValue)
@@ -9099,6 +9255,9 @@ func (m *RateLimit_Action_HeaderValueMatch) Size() (n int) {
 }
 
 func (m *HeaderMatcher) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -9118,6 +9277,9 @@ func (m *HeaderMatcher) Size() (n int) {
 }
 
 func (m *HeaderMatcher_ExactMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.ExactMatch)
@@ -9125,6 +9287,9 @@ func (m *HeaderMatcher_ExactMatch) Size() (n int) {
 	return n
 }
 func (m *HeaderMatcher_RegexMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.RegexMatch)
@@ -9132,6 +9297,9 @@ func (m *HeaderMatcher_RegexMatch) Size() (n int) {
 	return n
 }
 func (m *HeaderMatcher_RangeMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.RangeMatch != nil {
@@ -9141,12 +9309,18 @@ func (m *HeaderMatcher_RangeMatch) Size() (n int) {
 	return n
 }
 func (m *HeaderMatcher_PresentMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	n += 2
 	return n
 }
 func (m *HeaderMatcher_PrefixMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.PrefixMatch)
@@ -9154,6 +9328,9 @@ func (m *HeaderMatcher_PrefixMatch) Size() (n int) {
 	return n
 }
 func (m *HeaderMatcher_SuffixMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SuffixMatch)
@@ -9161,6 +9338,9 @@ func (m *HeaderMatcher_SuffixMatch) Size() (n int) {
 	return n
 }
 func (m *QueryParameterMatcher) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -12304,6 +12484,17 @@ func (m *RouteAction_RetryPolicy) Unmarshal(dAtA []byte) error {
 				postIndex := iNdEx + packedLen
 				if postIndex > l {
 					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.RetriableStatusCodes) == 0 {
+					m.RetriableStatusCodes = make([]uint32, 0, elementCount)
 				}
 				for iNdEx < postIndex {
 					var v uint32

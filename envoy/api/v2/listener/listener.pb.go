@@ -42,9 +42,9 @@ type Filter struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Filter specific configuration which depends on the filter being
 	// instantiated. See the supported filters for further documentation.
-	Config *types.Struct `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
+	Config *types.Struct `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	// [#not-implemented-hide:]
-	DeprecatedV1         *Filter_DeprecatedV1 `protobuf:"bytes,3,opt,name=deprecated_v1,json=deprecatedV1" json:"deprecated_v1,omitempty"` // Deprecated: Do not use.
+	DeprecatedV1         *Filter_DeprecatedV1 `protobuf:"bytes,3,opt,name=deprecated_v1,json=deprecatedV1,proto3" json:"deprecated_v1,omitempty"` // Deprecated: Do not use.
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
 	XXX_sizecache        int32                `json:"-"`
@@ -181,27 +181,27 @@ func (m *Filter_DeprecatedV1) GetType() string {
 type FilterChainMatch struct {
 	// Optional destination port to consider when use_original_dst is set on the
 	// listener in determining a filter chain match.
-	DestinationPort *types.UInt32Value `protobuf:"bytes,8,opt,name=destination_port,json=destinationPort" json:"destination_port,omitempty"`
+	DestinationPort *types.UInt32Value `protobuf:"bytes,8,opt,name=destination_port,json=destinationPort,proto3" json:"destination_port,omitempty"`
 	// If non-empty, an IP address and prefix length to match addresses when the
 	// listener is bound to 0.0.0.0/:: or when use_original_dst is specified.
-	PrefixRanges []*core.CidrRange `protobuf:"bytes,3,rep,name=prefix_ranges,json=prefixRanges" json:"prefix_ranges,omitempty"`
+	PrefixRanges []*core.CidrRange `protobuf:"bytes,3,rep,name=prefix_ranges,json=prefixRanges,proto3" json:"prefix_ranges,omitempty"`
 	// If non-empty, an IP address and suffix length to match addresses when the
 	// listener is bound to 0.0.0.0/:: or when use_original_dst is specified.
 	// [#not-implemented-hide:]
 	AddressSuffix string `protobuf:"bytes,4,opt,name=address_suffix,json=addressSuffix,proto3" json:"address_suffix,omitempty"`
 	// [#not-implemented-hide:]
-	SuffixLen *types.UInt32Value `protobuf:"bytes,5,opt,name=suffix_len,json=suffixLen" json:"suffix_len,omitempty"`
+	SuffixLen *types.UInt32Value `protobuf:"bytes,5,opt,name=suffix_len,json=suffixLen,proto3" json:"suffix_len,omitempty"`
 	// The criteria is satisfied if the source IP address of the downstream
 	// connection is contained in at least one of the specified subnets. If the
 	// parameter is not specified or the list is empty, the source IP address is
 	// ignored.
 	// [#not-implemented-hide:]
-	SourcePrefixRanges []*core.CidrRange `protobuf:"bytes,6,rep,name=source_prefix_ranges,json=sourcePrefixRanges" json:"source_prefix_ranges,omitempty"`
+	SourcePrefixRanges []*core.CidrRange `protobuf:"bytes,6,rep,name=source_prefix_ranges,json=sourcePrefixRanges,proto3" json:"source_prefix_ranges,omitempty"`
 	// The criteria is satisfied if the source port of the downstream connection
 	// is contained in at least one of the specified ports. If the parameter is
 	// not specified, the source port is ignored.
 	// [#not-implemented-hide:]
-	SourcePorts []*types.UInt32Value `protobuf:"bytes,7,rep,name=source_ports,json=sourcePorts" json:"source_ports,omitempty"`
+	SourcePorts []*types.UInt32Value `protobuf:"bytes,7,rep,name=source_ports,json=sourcePorts,proto3" json:"source_ports,omitempty"`
 	// If non-empty, a list of server names (e.g. SNI for TLS protocol) to consider when determining
 	// a filter chain match. Those values will be compared against the server names of a new
 	// connection, when detected by one of the listener filters.
@@ -215,7 +215,7 @@ type FilterChainMatch struct {
 	//
 	//   See the :ref:`FAQ entry <faq_how_to_setup_sni>` on how to configure SNI for more
 	//   information.
-	ServerNames []string `protobuf:"bytes,11,rep,name=server_names,json=serverNames" json:"server_names,omitempty"`
+	ServerNames []string `protobuf:"bytes,11,rep,name=server_names,json=serverNames,proto3" json:"server_names,omitempty"`
 	// If non-empty, a transport protocol to consider when determining a filter chain match.
 	// This value will be compared against the transport protocol of a new connection, when
 	// it's detected by one of the listener filters.
@@ -245,7 +245,7 @@ type FilterChainMatch struct {
 	//   However, the use of ALPN is pretty much limited to the HTTP/2 traffic on the Internet,
 	//   and matching on values other than ``h2`` is going to lead to a lot of false negatives,
 	//   unless all connecting clients are known to use ALPN.
-	ApplicationProtocols []string `protobuf:"bytes,10,rep,name=application_protocols,json=applicationProtocols" json:"application_protocols,omitempty"`
+	ApplicationProtocols []string `protobuf:"bytes,10,rep,name=application_protocols,json=applicationProtocols,proto3" json:"application_protocols,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -351,25 +351,25 @@ func (m *FilterChainMatch) GetApplicationProtocols() []string {
 // various other parameters.
 type FilterChain struct {
 	// The criteria to use when matching a connection to this filter chain.
-	FilterChainMatch *FilterChainMatch `protobuf:"bytes,1,opt,name=filter_chain_match,json=filterChainMatch" json:"filter_chain_match,omitempty"`
+	FilterChainMatch *FilterChainMatch `protobuf:"bytes,1,opt,name=filter_chain_match,json=filterChainMatch,proto3" json:"filter_chain_match,omitempty"`
 	// The TLS context for this filter chain.
-	TlsContext *auth.DownstreamTlsContext `protobuf:"bytes,2,opt,name=tls_context,json=tlsContext" json:"tls_context,omitempty"`
+	TlsContext *auth.DownstreamTlsContext `protobuf:"bytes,2,opt,name=tls_context,json=tlsContext,proto3" json:"tls_context,omitempty"`
 	// A list of individual network filters that make up the filter chain for
 	// connections established with the listener. Order matters as the filters are
 	// processed sequentially as connection events happen. Note: If the filter
 	// list is empty, the connection will close by default.
-	Filters []Filter `protobuf:"bytes,3,rep,name=filters" json:"filters"`
+	Filters []Filter `protobuf:"bytes,3,rep,name=filters,proto3" json:"filters"`
 	// Whether the listener should expect a PROXY protocol V1 header on new
 	// connections. If this option is enabled, the listener will assume that that
 	// remote address of the connection is the one specified in the header. Some
 	// load balancers including the AWS ELB support this option. If the option is
 	// absent or set to false, Envoy will use the physical peer address of the
 	// connection as the remote address.
-	UseProxyProto *types.BoolValue `protobuf:"bytes,4,opt,name=use_proxy_proto,json=useProxyProto" json:"use_proxy_proto,omitempty"`
+	UseProxyProto *types.BoolValue `protobuf:"bytes,4,opt,name=use_proxy_proto,json=useProxyProto,proto3" json:"use_proxy_proto,omitempty"`
 	// [#not-implemented-hide:] filter chain metadata.
-	Metadata *core.Metadata `protobuf:"bytes,5,opt,name=metadata" json:"metadata,omitempty"`
+	Metadata *core.Metadata `protobuf:"bytes,5,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	// See :ref:`base.TransportSocket<envoy_api_msg_core.TransportSocket>` description.
-	TransportSocket      *core.TransportSocket `protobuf:"bytes,6,opt,name=transport_socket,json=transportSocket" json:"transport_socket,omitempty"`
+	TransportSocket      *core.TransportSocket `protobuf:"bytes,6,opt,name=transport_socket,json=transportSocket,proto3" json:"transport_socket,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
 	XXX_unrecognized     []byte                `json:"-"`
 	XXX_sizecache        int32                 `json:"-"`
@@ -460,7 +460,7 @@ type ListenerFilter struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Filter specific configuration which depends on the filter being
 	// instantiated. See the supported filters for further documentation.
-	Config               *types.Struct `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
+	Config               *types.Struct `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -1056,6 +1056,9 @@ func encodeVarintListener(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *Filter) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -1077,6 +1080,9 @@ func (m *Filter) Size() (n int) {
 }
 
 func (m *Filter_DeprecatedV1) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Type)
@@ -1090,6 +1096,9 @@ func (m *Filter_DeprecatedV1) Size() (n int) {
 }
 
 func (m *FilterChainMatch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.PrefixRanges) > 0 {
@@ -1145,6 +1154,9 @@ func (m *FilterChainMatch) Size() (n int) {
 }
 
 func (m *FilterChain) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.FilterChainMatch != nil {
@@ -1180,6 +1192,9 @@ func (m *FilterChain) Size() (n int) {
 }
 
 func (m *ListenerFilter) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)

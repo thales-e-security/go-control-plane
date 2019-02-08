@@ -91,7 +91,7 @@ type RateLimitServiceConfig_ClusterName struct {
 	ClusterName string `protobuf:"bytes,1,opt,name=cluster_name,json=clusterName,proto3,oneof"`
 }
 type RateLimitServiceConfig_GrpcService struct {
-	GrpcService *core.GrpcService `protobuf:"bytes,2,opt,name=grpc_service,json=grpcService,oneof"`
+	GrpcService *core.GrpcService `protobuf:"bytes,2,opt,name=grpc_service,json=grpcService,proto3,oneof"`
 }
 
 func (*RateLimitServiceConfig_ClusterName) isRateLimitServiceConfig_ServiceSpecifier() {}
@@ -104,7 +104,6 @@ func (m *RateLimitServiceConfig) GetServiceSpecifier() isRateLimitServiceConfig_
 	return nil
 }
 
-// Deprecated: Do not use.
 func (m *RateLimitServiceConfig) GetClusterName() string {
 	if x, ok := m.GetServiceSpecifier().(*RateLimitServiceConfig_ClusterName); ok {
 		return x.ClusterName
@@ -270,6 +269,9 @@ func encodeVarintRls(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *RateLimitServiceConfig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ServiceSpecifier != nil {
@@ -285,6 +287,9 @@ func (m *RateLimitServiceConfig) Size() (n int) {
 }
 
 func (m *RateLimitServiceConfig_ClusterName) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.ClusterName)
@@ -292,6 +297,9 @@ func (m *RateLimitServiceConfig_ClusterName) Size() (n int) {
 	return n
 }
 func (m *RateLimitServiceConfig_GrpcService) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.GrpcService != nil {

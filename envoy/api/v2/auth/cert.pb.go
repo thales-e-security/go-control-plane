@@ -88,10 +88,10 @@ type TlsParameters struct {
 	//   AES256-SHA
 	//
 	// will be used.
-	CipherSuites []string `protobuf:"bytes,3,rep,name=cipher_suites,json=cipherSuites" json:"cipher_suites,omitempty"`
+	CipherSuites []string `protobuf:"bytes,3,rep,name=cipher_suites,json=cipherSuites,proto3" json:"cipher_suites,omitempty"`
 	// If specified, the TLS connection will only support the specified ECDH
 	// curves. If not specified, the default curves (X25519, P-256) will be used.
-	EcdhCurves           []string `protobuf:"bytes,4,rep,name=ecdh_curves,json=ecdhCurves" json:"ecdh_curves,omitempty"`
+	EcdhCurves           []string `protobuf:"bytes,4,rep,name=ecdh_curves,json=ecdhCurves,proto3" json:"ecdh_curves,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -160,15 +160,15 @@ func (m *TlsParameters) GetEcdhCurves() []string {
 
 type TlsCertificate struct {
 	// The TLS certificate chain.
-	CertificateChain *core.DataSource `protobuf:"bytes,1,opt,name=certificate_chain,json=certificateChain" json:"certificate_chain,omitempty"`
+	CertificateChain *core.DataSource `protobuf:"bytes,1,opt,name=certificate_chain,json=certificateChain,proto3" json:"certificate_chain,omitempty"`
 	// The TLS private key.
-	PrivateKey *core.DataSource `protobuf:"bytes,2,opt,name=private_key,json=privateKey" json:"private_key,omitempty"`
+	PrivateKey *core.DataSource `protobuf:"bytes,2,opt,name=private_key,json=privateKey,proto3" json:"private_key,omitempty"`
 	// [#not-implemented-hide:]
-	Password *core.DataSource `protobuf:"bytes,3,opt,name=password" json:"password,omitempty"`
+	Password *core.DataSource `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
 	// [#not-implemented-hide:]
-	OcspStaple *core.DataSource `protobuf:"bytes,4,opt,name=ocsp_staple,json=ocspStaple" json:"ocsp_staple,omitempty"`
+	OcspStaple *core.DataSource `protobuf:"bytes,4,opt,name=ocsp_staple,json=ocspStaple,proto3" json:"ocsp_staple,omitempty"`
 	// [#not-implemented-hide:]
-	SignedCertificateTimestamp []*core.DataSource `protobuf:"bytes,5,rep,name=signed_certificate_timestamp,json=signedCertificateTimestamp" json:"signed_certificate_timestamp,omitempty"`
+	SignedCertificateTimestamp []*core.DataSource `protobuf:"bytes,5,rep,name=signed_certificate_timestamp,json=signedCertificateTimestamp,proto3" json:"signed_certificate_timestamp,omitempty"`
 	XXX_NoUnkeyedLiteral       struct{}           `json:"-"`
 	XXX_unrecognized           []byte             `json:"-"`
 	XXX_sizecache              int32              `json:"-"`
@@ -266,7 +266,7 @@ type TlsSessionTicketKeys struct {
 	//   * Keep the session ticket keys at least as secure as your TLS certificate private keys
 	//   * Rotate session ticket keys at least daily, and preferably hourly
 	//   * Always generate keys using a cryptographically-secure random data source
-	Keys                 []*core.DataSource `protobuf:"bytes,1,rep,name=keys" json:"keys,omitempty"`
+	Keys                 []*core.DataSource `protobuf:"bytes,1,rep,name=keys,proto3" json:"keys,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
 	XXX_unrecognized     []byte             `json:"-"`
 	XXX_sizecache        int32              `json:"-"`
@@ -332,7 +332,7 @@ type CertificateValidationContext struct {
 	//
 	// See :ref:`the TLS overview <arch_overview_ssl_enabling_verification>` for a list of common
 	// system CA locations.
-	TrustedCa *core.DataSource `protobuf:"bytes,1,opt,name=trusted_ca,json=trustedCa" json:"trusted_ca,omitempty"`
+	TrustedCa *core.DataSource `protobuf:"bytes,1,opt,name=trusted_ca,json=trustedCa,proto3" json:"trusted_ca,omitempty"`
 	// An optional list of base64-encoded SHA-256 hashes. If specified, Envoy will verify that the
 	// SHA-256 of the DER-encoded Subject Public Key Information (SPKI) of the presented certificate
 	// matches one of the specified values.
@@ -363,7 +363,7 @@ type CertificateValidationContext struct {
 	//   <envoy_api_field_auth.CertificateValidationContext.verify_certificate_hash>`,
 	//   because SPKI is tied to a private key, so it doesn't change when the certificate
 	//   is renewed using the same private key.
-	VerifyCertificateSpki []string `protobuf:"bytes,3,rep,name=verify_certificate_spki,json=verifyCertificateSpki" json:"verify_certificate_spki,omitempty"`
+	VerifyCertificateSpki []string `protobuf:"bytes,3,rep,name=verify_certificate_spki,json=verifyCertificateSpki,proto3" json:"verify_certificate_spki,omitempty"`
 	// An optional list of hex-encoded SHA-256 hashes. If specified, Envoy will verify that
 	// the SHA-256 of the DER-encoded presented certificate matches one of the specified values.
 	//
@@ -390,7 +390,7 @@ type CertificateValidationContext struct {
 	// :ref:`verify_certificate_spki
 	// <envoy_api_field_auth.CertificateValidationContext.verify_certificate_spki>` are specified,
 	// a hash matching value from either of the lists will result in the certificate being accepted.
-	VerifyCertificateHash []string `protobuf:"bytes,2,rep,name=verify_certificate_hash,json=verifyCertificateHash" json:"verify_certificate_hash,omitempty"`
+	VerifyCertificateHash []string `protobuf:"bytes,2,rep,name=verify_certificate_hash,json=verifyCertificateHash,proto3" json:"verify_certificate_hash,omitempty"`
 	// An optional list of Subject Alternative Names. If specified, Envoy will verify that the
 	// Subject Alternative Name of the presented certificate matches one of the specified values.
 	//
@@ -399,17 +399,17 @@ type CertificateValidationContext struct {
 	//   Subject Alternative Names are easily spoofable and verifying only them is insecure,
 	//   therefore this option must be used together with :ref:`trusted_ca
 	//   <envoy_api_field_auth.CertificateValidationContext.trusted_ca>`.
-	VerifySubjectAltName []string `protobuf:"bytes,4,rep,name=verify_subject_alt_name,json=verifySubjectAltName" json:"verify_subject_alt_name,omitempty"`
+	VerifySubjectAltName []string `protobuf:"bytes,4,rep,name=verify_subject_alt_name,json=verifySubjectAltName,proto3" json:"verify_subject_alt_name,omitempty"`
 	// [#not-implemented-hide:] Must present a signed time-stamped OCSP response.
-	RequireOcspStaple *types.BoolValue `protobuf:"bytes,5,opt,name=require_ocsp_staple,json=requireOcspStaple" json:"require_ocsp_staple,omitempty"`
+	RequireOcspStaple *types.BoolValue `protobuf:"bytes,5,opt,name=require_ocsp_staple,json=requireOcspStaple,proto3" json:"require_ocsp_staple,omitempty"`
 	// [#not-implemented-hide:] Must present signed certificate time-stamp.
-	RequireSignedCertificateTimestamp *types.BoolValue `protobuf:"bytes,6,opt,name=require_signed_certificate_timestamp,json=requireSignedCertificateTimestamp" json:"require_signed_certificate_timestamp,omitempty"`
+	RequireSignedCertificateTimestamp *types.BoolValue `protobuf:"bytes,6,opt,name=require_signed_certificate_timestamp,json=requireSignedCertificateTimestamp,proto3" json:"require_signed_certificate_timestamp,omitempty"`
 	// An optional `certificate revocation list
 	// <http://https://en.wikipedia.org/wiki/Certificate_revocation_list>`_
 	// (in PEM format). If specified, Envoy will verify that the presented peer
 	// certificate has not been revoked by this CRL. If this DataSource contains
 	// multiple CRLs, all of them will be used.
-	Crl *core.DataSource `protobuf:"bytes,7,opt,name=crl" json:"crl,omitempty"`
+	Crl *core.DataSource `protobuf:"bytes,7,opt,name=crl,proto3" json:"crl,omitempty"`
 	// If specified, Envoy will not reject expired certificates.
 	AllowExpiredCertificate bool     `protobuf:"varint,8,opt,name=allow_expired_certificate,json=allowExpiredCertificate,proto3" json:"allow_expired_certificate,omitempty"`
 	XXX_NoUnkeyedLiteral    struct{} `json:"-"`
@@ -509,7 +509,7 @@ func (m *CertificateValidationContext) GetAllowExpiredCertificate() bool {
 // TLS context shared by both client and server TLS contexts.
 type CommonTlsContext struct {
 	// TLS protocol versions, cipher suites etc.
-	TlsParams *TlsParameters `protobuf:"bytes,1,opt,name=tls_params,json=tlsParams" json:"tls_params,omitempty"`
+	TlsParams *TlsParameters `protobuf:"bytes,1,opt,name=tls_params,json=tlsParams,proto3" json:"tls_params,omitempty"`
 	// Multiple TLS certificates can be associated with the same context.
 	// E.g. to allow both RSA and ECDSA certificates, two TLS certificates can be configured.
 	//
@@ -517,9 +517,9 @@ type CommonTlsContext struct {
 	//
 	//   Although this is a list, currently only a single certificate is supported. This will be
 	//   relaxed in the future.
-	TlsCertificates []*TlsCertificate `protobuf:"bytes,2,rep,name=tls_certificates,json=tlsCertificates" json:"tls_certificates,omitempty"`
+	TlsCertificates []*TlsCertificate `protobuf:"bytes,2,rep,name=tls_certificates,json=tlsCertificates,proto3" json:"tls_certificates,omitempty"`
 	// Configs for fetching TLS certificates via SDS API.
-	TlsCertificateSdsSecretConfigs []*SdsSecretConfig `protobuf:"bytes,6,rep,name=tls_certificate_sds_secret_configs,json=tlsCertificateSdsSecretConfigs" json:"tls_certificate_sds_secret_configs,omitempty"`
+	TlsCertificateSdsSecretConfigs []*SdsSecretConfig `protobuf:"bytes,6,rep,name=tls_certificate_sds_secret_configs,json=tlsCertificateSdsSecretConfigs,proto3" json:"tls_certificate_sds_secret_configs,omitempty"`
 	// Types that are valid to be assigned to ValidationContextType:
 	//	*CommonTlsContext_ValidationContext
 	//	*CommonTlsContext_ValidationContextSdsSecretConfig
@@ -534,7 +534,7 @@ type CommonTlsContext struct {
 	// * "http/1.1" If the listener is only going to support HTTP/1.1.
 	//
 	// There is no default for this parameter. If empty, Envoy will not expose ALPN.
-	AlpnProtocols        []string `protobuf:"bytes,4,rep,name=alpn_protocols,json=alpnProtocols" json:"alpn_protocols,omitempty"`
+	AlpnProtocols        []string `protobuf:"bytes,4,rep,name=alpn_protocols,json=alpnProtocols,proto3" json:"alpn_protocols,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -581,10 +581,10 @@ type isCommonTlsContext_ValidationContextType interface {
 }
 
 type CommonTlsContext_ValidationContext struct {
-	ValidationContext *CertificateValidationContext `protobuf:"bytes,3,opt,name=validation_context,json=validationContext,oneof"`
+	ValidationContext *CertificateValidationContext `protobuf:"bytes,3,opt,name=validation_context,json=validationContext,proto3,oneof"`
 }
 type CommonTlsContext_ValidationContextSdsSecretConfig struct {
-	ValidationContextSdsSecretConfig *SdsSecretConfig `protobuf:"bytes,7,opt,name=validation_context_sds_secret_config,json=validationContextSdsSecretConfig,oneof"`
+	ValidationContextSdsSecretConfig *SdsSecretConfig `protobuf:"bytes,7,opt,name=validation_context_sds_secret_config,json=validationContextSdsSecretConfig,proto3,oneof"`
 }
 
 func (*CommonTlsContext_ValidationContext) isCommonTlsContext_ValidationContextType()                {}
@@ -715,7 +715,7 @@ func _CommonTlsContext_OneofSizer(msg proto.Message) (n int) {
 
 type UpstreamTlsContext struct {
 	// Common TLS context settings.
-	CommonTlsContext *CommonTlsContext `protobuf:"bytes,1,opt,name=common_tls_context,json=commonTlsContext" json:"common_tls_context,omitempty"`
+	CommonTlsContext *CommonTlsContext `protobuf:"bytes,1,opt,name=common_tls_context,json=commonTlsContext,proto3" json:"common_tls_context,omitempty"`
 	// SNI string to use when creating TLS backend connections.
 	Sni string `protobuf:"bytes,2,opt,name=sni,proto3" json:"sni,omitempty"`
 	// If true, server-initiated TLS renegotiation will be allowed.
@@ -785,13 +785,13 @@ func (m *UpstreamTlsContext) GetAllowRenegotiation() bool {
 
 type DownstreamTlsContext struct {
 	// Common TLS context settings.
-	CommonTlsContext *CommonTlsContext `protobuf:"bytes,1,opt,name=common_tls_context,json=commonTlsContext" json:"common_tls_context,omitempty"`
+	CommonTlsContext *CommonTlsContext `protobuf:"bytes,1,opt,name=common_tls_context,json=commonTlsContext,proto3" json:"common_tls_context,omitempty"`
 	// If specified, Envoy will reject connections without a valid client
 	// certificate.
-	RequireClientCertificate *types.BoolValue `protobuf:"bytes,2,opt,name=require_client_certificate,json=requireClientCertificate" json:"require_client_certificate,omitempty"`
+	RequireClientCertificate *types.BoolValue `protobuf:"bytes,2,opt,name=require_client_certificate,json=requireClientCertificate,proto3" json:"require_client_certificate,omitempty"`
 	// If specified, Envoy will reject connections without a valid and matching SNI.
 	// [#not-implemented-hide:]
-	RequireSni *types.BoolValue `protobuf:"bytes,3,opt,name=require_sni,json=requireSni" json:"require_sni,omitempty"`
+	RequireSni *types.BoolValue `protobuf:"bytes,3,opt,name=require_sni,json=requireSni,proto3" json:"require_sni,omitempty"`
 	// Types that are valid to be assigned to SessionTicketKeysType:
 	//	*DownstreamTlsContext_SessionTicketKeys
 	//	*DownstreamTlsContext_SessionTicketKeysSdsSecretConfig
@@ -842,10 +842,10 @@ type isDownstreamTlsContext_SessionTicketKeysType interface {
 }
 
 type DownstreamTlsContext_SessionTicketKeys struct {
-	SessionTicketKeys *TlsSessionTicketKeys `protobuf:"bytes,4,opt,name=session_ticket_keys,json=sessionTicketKeys,oneof"`
+	SessionTicketKeys *TlsSessionTicketKeys `protobuf:"bytes,4,opt,name=session_ticket_keys,json=sessionTicketKeys,proto3,oneof"`
 }
 type DownstreamTlsContext_SessionTicketKeysSdsSecretConfig struct {
-	SessionTicketKeysSdsSecretConfig *SdsSecretConfig `protobuf:"bytes,5,opt,name=session_ticket_keys_sds_secret_config,json=sessionTicketKeysSdsSecretConfig,oneof"`
+	SessionTicketKeysSdsSecretConfig *SdsSecretConfig `protobuf:"bytes,5,opt,name=session_ticket_keys_sds_secret_config,json=sessionTicketKeysSdsSecretConfig,proto3,oneof"`
 }
 
 func (*DownstreamTlsContext_SessionTicketKeys) isDownstreamTlsContext_SessionTicketKeysType() {}
@@ -974,7 +974,7 @@ type SdsSecretConfig struct {
 	// When both name and config are specified, then secret can be fetched and/or reloaded via SDS.
 	// When only name is specified, then secret will be loaded from static resources [V2-API-DIFF].
 	Name                 string             `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	SdsConfig            *core.ConfigSource `protobuf:"bytes,2,opt,name=sds_config,json=sdsConfig" json:"sds_config,omitempty"`
+	SdsConfig            *core.ConfigSource `protobuf:"bytes,2,opt,name=sds_config,json=sdsConfig,proto3" json:"sds_config,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
 	XXX_unrecognized     []byte             `json:"-"`
 	XXX_sizecache        int32              `json:"-"`
@@ -1082,13 +1082,13 @@ type isSecret_Type interface {
 }
 
 type Secret_TlsCertificate struct {
-	TlsCertificate *TlsCertificate `protobuf:"bytes,2,opt,name=tls_certificate,json=tlsCertificate,oneof"`
+	TlsCertificate *TlsCertificate `protobuf:"bytes,2,opt,name=tls_certificate,json=tlsCertificate,proto3,oneof"`
 }
 type Secret_SessionTicketKeys struct {
-	SessionTicketKeys *TlsSessionTicketKeys `protobuf:"bytes,3,opt,name=session_ticket_keys,json=sessionTicketKeys,oneof"`
+	SessionTicketKeys *TlsSessionTicketKeys `protobuf:"bytes,3,opt,name=session_ticket_keys,json=sessionTicketKeys,proto3,oneof"`
 }
 type Secret_ValidationContext struct {
-	ValidationContext *CertificateValidationContext `protobuf:"bytes,4,opt,name=validation_context,json=validationContext,oneof"`
+	ValidationContext *CertificateValidationContext `protobuf:"bytes,4,opt,name=validation_context,json=validationContext,proto3,oneof"`
 }
 
 func (*Secret_TlsCertificate) isSecret_Type()    {}
@@ -2433,6 +2433,9 @@ func encodeVarintCert(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *TlsParameters) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.TlsMinimumProtocolVersion != 0 {
@@ -2460,6 +2463,9 @@ func (m *TlsParameters) Size() (n int) {
 }
 
 func (m *TlsCertificate) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.CertificateChain != nil {
@@ -2491,6 +2497,9 @@ func (m *TlsCertificate) Size() (n int) {
 }
 
 func (m *TlsSessionTicketKeys) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Keys) > 0 {
@@ -2506,6 +2515,9 @@ func (m *TlsSessionTicketKeys) Size() (n int) {
 }
 
 func (m *CertificateValidationContext) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.TrustedCa != nil {
@@ -2552,6 +2564,9 @@ func (m *CertificateValidationContext) Size() (n int) {
 }
 
 func (m *CommonTlsContext) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.TlsParams != nil {
@@ -2586,6 +2601,9 @@ func (m *CommonTlsContext) Size() (n int) {
 }
 
 func (m *CommonTlsContext_ValidationContext) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ValidationContext != nil {
@@ -2595,6 +2613,9 @@ func (m *CommonTlsContext_ValidationContext) Size() (n int) {
 	return n
 }
 func (m *CommonTlsContext_ValidationContextSdsSecretConfig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ValidationContextSdsSecretConfig != nil {
@@ -2604,6 +2625,9 @@ func (m *CommonTlsContext_ValidationContextSdsSecretConfig) Size() (n int) {
 	return n
 }
 func (m *UpstreamTlsContext) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.CommonTlsContext != nil {
@@ -2624,6 +2648,9 @@ func (m *UpstreamTlsContext) Size() (n int) {
 }
 
 func (m *DownstreamTlsContext) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.CommonTlsContext != nil {
@@ -2648,6 +2675,9 @@ func (m *DownstreamTlsContext) Size() (n int) {
 }
 
 func (m *DownstreamTlsContext_SessionTicketKeys) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.SessionTicketKeys != nil {
@@ -2657,6 +2687,9 @@ func (m *DownstreamTlsContext_SessionTicketKeys) Size() (n int) {
 	return n
 }
 func (m *DownstreamTlsContext_SessionTicketKeysSdsSecretConfig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.SessionTicketKeysSdsSecretConfig != nil {
@@ -2666,6 +2699,9 @@ func (m *DownstreamTlsContext_SessionTicketKeysSdsSecretConfig) Size() (n int) {
 	return n
 }
 func (m *SdsSecretConfig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -2683,6 +2719,9 @@ func (m *SdsSecretConfig) Size() (n int) {
 }
 
 func (m *Secret) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -2699,6 +2738,9 @@ func (m *Secret) Size() (n int) {
 }
 
 func (m *Secret_TlsCertificate) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.TlsCertificate != nil {
@@ -2708,6 +2750,9 @@ func (m *Secret_TlsCertificate) Size() (n int) {
 	return n
 }
 func (m *Secret_SessionTicketKeys) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.SessionTicketKeys != nil {
@@ -2717,6 +2762,9 @@ func (m *Secret_SessionTicketKeys) Size() (n int) {
 	return n
 }
 func (m *Secret_ValidationContext) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ValidationContext != nil {

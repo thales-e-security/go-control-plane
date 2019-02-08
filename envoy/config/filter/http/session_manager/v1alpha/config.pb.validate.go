@@ -109,6 +109,10 @@ func (m *TokenBinding) Validate() error {
 
 	// no validation rules for Binding
 
+	// no validation rules for HkdfHash
+
+	// no validation rules for EncryptionAlg
+
 	return nil
 }
 

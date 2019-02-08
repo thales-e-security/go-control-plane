@@ -15,8 +15,10 @@ import _ "github.com/lyft/protoc-gen-validate/validate"
 
 import bytes "bytes"
 
-import context "golang.org/x/net/context"
-import grpc "google.golang.org/grpc"
+import (
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
+)
 
 import io "io"
 
@@ -70,7 +72,7 @@ type Listener struct {
 	// The address that the listener should listen on. In general, the address must be unique, though
 	// that is governed by the bind rules of the OS. E.g., multiple listeners can listen on port 0 on
 	// Linux as the actual port will be allocated by the OS.
-	Address core.Address `protobuf:"bytes,2,opt,name=address" json:"address"`
+	Address core.Address `protobuf:"bytes,2,opt,name=address,proto3" json:"address"`
 	// A list of filter chains to consider for this listener. The
 	// :ref:`FilterChain <envoy_api_msg_listener.FilterChain>` with the most specific
 	// :ref:`FilterChainMatch <envoy_api_msg_listener.FilterChainMatch>` criteria is used on a
@@ -78,7 +80,7 @@ type Listener struct {
 	//
 	// Example using SNI for filter chain selection can be found in the
 	// :ref:`FAQ entry <faq_how_to_setup_sni>`.
-	FilterChains []listener.FilterChain `protobuf:"bytes,3,rep,name=filter_chains,json=filterChains" json:"filter_chains"`
+	FilterChains []listener.FilterChain `protobuf:"bytes,3,rep,name=filter_chains,json=filterChains,proto3" json:"filter_chains"`
 	// If a connection is redirected using *iptables*, the port on which the proxy
 	// receives it might be different from the original destination address. When this flag is set to
 	// true, the listener hands off redirected connections to the listener associated with the
@@ -94,14 +96,14 @@ type Listener struct {
 	//   :ref:`FilterChainMatch <envoy_api_msg_listener.FilterChainMatch>` is implemented this flag
 	//   will be removed, as filter chain matching can be used to select a filter chain based on the
 	//   restored destination address.
-	UseOriginalDst *types.BoolValue `protobuf:"bytes,4,opt,name=use_original_dst,json=useOriginalDst" json:"use_original_dst,omitempty"` // Deprecated: Do not use.
+	UseOriginalDst *types.BoolValue `protobuf:"bytes,4,opt,name=use_original_dst,json=useOriginalDst,proto3" json:"use_original_dst,omitempty"` // Deprecated: Do not use.
 	// Soft limit on size of the listener’s new connection read and write buffers.
 	// If unspecified, an implementation defined default is applied (1MiB).
-	PerConnectionBufferLimitBytes *types.UInt32Value `protobuf:"bytes,5,opt,name=per_connection_buffer_limit_bytes,json=perConnectionBufferLimitBytes" json:"per_connection_buffer_limit_bytes,omitempty"`
+	PerConnectionBufferLimitBytes *types.UInt32Value `protobuf:"bytes,5,opt,name=per_connection_buffer_limit_bytes,json=perConnectionBufferLimitBytes,proto3" json:"per_connection_buffer_limit_bytes,omitempty"`
 	// Listener metadata.
-	Metadata *core.Metadata `protobuf:"bytes,6,opt,name=metadata" json:"metadata,omitempty"`
+	Metadata *core.Metadata `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	// [#not-implemented-hide:]
-	DeprecatedV1 *Listener_DeprecatedV1 `protobuf:"bytes,7,opt,name=deprecated_v1,json=deprecatedV1" json:"deprecated_v1,omitempty"`
+	DeprecatedV1 *Listener_DeprecatedV1 `protobuf:"bytes,7,opt,name=deprecated_v1,json=deprecatedV1,proto3" json:"deprecated_v1,omitempty"`
 	// The type of draining to perform at a listener-wide level.
 	DrainType Listener_DrainType `protobuf:"varint,8,opt,name=drain_type,json=drainType,proto3,enum=envoy.api.v2.Listener_DrainType" json:"drain_type,omitempty"`
 	// Listener filters have the opportunity to manipulate and augment the connection metadata that
@@ -109,7 +111,7 @@ type Listener struct {
 	// :ref:`filter_chains <envoy_api_field_Listener.filter_chains>`. Order matters as the
 	// filters are processed sequentially right after a socket has been accepted by the listener, and
 	// before a connection is created.
-	ListenerFilters []listener.ListenerFilter `protobuf:"bytes,9,rep,name=listener_filters,json=listenerFilters" json:"listener_filters"`
+	ListenerFilters []listener.ListenerFilter `protobuf:"bytes,9,rep,name=listener_filters,json=listenerFilters,proto3" json:"listener_filters"`
 	// Whether the listener should be set as a transparent socket.
 	// When this flag is set to true, connections can be redirected to the listener using an
 	// *iptables* *TPROXY* target, in which case the original source and destination addresses and
@@ -124,17 +126,17 @@ type Listener struct {
 	// Setting this flag requires Envoy to run with the *CAP_NET_ADMIN* capability.
 	// When this flag is not set (default), the socket is not modified, i.e. the transparent option
 	// is neither set nor reset.
-	Transparent *types.BoolValue `protobuf:"bytes,10,opt,name=transparent" json:"transparent,omitempty"`
+	Transparent *types.BoolValue `protobuf:"bytes,10,opt,name=transparent,proto3" json:"transparent,omitempty"`
 	// Whether the listener should set the *IP_FREEBIND* socket option. When this
 	// flag is set to true, listeners can be bound to an IP address that is not
 	// configured on the system running Envoy. When this flag is set to false, the
 	// option *IP_FREEBIND* is disabled on the socket. When this flag is not set
 	// (default), the socket is not modified, i.e. the option is neither enabled
 	// nor disabled.
-	Freebind *types.BoolValue `protobuf:"bytes,11,opt,name=freebind" json:"freebind,omitempty"`
+	Freebind *types.BoolValue `protobuf:"bytes,11,opt,name=freebind,proto3" json:"freebind,omitempty"`
 	// Additional socket options that may not be present in Envoy source code or
 	// precompiled binaries.
-	SocketOptions []*core.SocketOption `protobuf:"bytes,13,rep,name=socket_options,json=socketOptions" json:"socket_options,omitempty"`
+	SocketOptions []*core.SocketOption `protobuf:"bytes,13,rep,name=socket_options,json=socketOptions,proto3" json:"socket_options,omitempty"`
 	// Whether the listener should accept TCP Fast Open (TFO) connections.
 	// When this flag is set to a value greater than 0, the option TCP_FASTOPEN is enabled on
 	// the socket, with a queue length of the specified size
@@ -149,7 +151,7 @@ type Listener struct {
 	//
 	// On macOS, only values of 0, 1, and unset are valid; other values may result in an error.
 	// To set the queue length on macOS, set the net.inet.tcp.fastopen_backlog kernel parameter.
-	TcpFastOpenQueueLength *types.UInt32Value `protobuf:"bytes,12,opt,name=tcp_fast_open_queue_length,json=tcpFastOpenQueueLength" json:"tcp_fast_open_queue_length,omitempty"`
+	TcpFastOpenQueueLength *types.UInt32Value `protobuf:"bytes,12,opt,name=tcp_fast_open_queue_length,json=tcpFastOpenQueueLength,proto3" json:"tcp_fast_open_queue_length,omitempty"`
 	XXX_NoUnkeyedLiteral   struct{}           `json:"-"`
 	XXX_unrecognized       []byte             `json:"-"`
 	XXX_sizecache          int32              `json:"-"`
@@ -290,7 +292,7 @@ type Listener_DeprecatedV1 struct {
 	// port. An additional filter chain must be created for every original
 	// destination port this listener may redirect to in v2, with the original
 	// port specified in the FilterChainMatch destination_port field.
-	BindToPort           *types.BoolValue `protobuf:"bytes,1,opt,name=bind_to_port,json=bindToPort" json:"bind_to_port,omitempty"`
+	BindToPort           *types.BoolValue `protobuf:"bytes,1,opt,name=bind_to_port,json=bindToPort,proto3" json:"bind_to_port,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -455,8 +457,9 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// Client API for ListenerDiscoveryService service
-
+// ListenerDiscoveryServiceClient is the client API for ListenerDiscoveryService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ListenerDiscoveryServiceClient interface {
 	StreamListeners(ctx context.Context, opts ...grpc.CallOption) (ListenerDiscoveryService_StreamListenersClient, error)
 	FetchListeners(ctx context.Context, in *DiscoveryRequest, opts ...grpc.CallOption) (*DiscoveryResponse, error)
@@ -510,8 +513,7 @@ func (c *listenerDiscoveryServiceClient) FetchListeners(ctx context.Context, in 
 	return out, nil
 }
 
-// Server API for ListenerDiscoveryService service
-
+// ListenerDiscoveryServiceServer is the server API for ListenerDiscoveryService service.
 type ListenerDiscoveryServiceServer interface {
 	StreamListeners(ListenerDiscoveryService_StreamListenersServer) error
 	FetchListeners(context.Context, *DiscoveryRequest) (*DiscoveryResponse, error)
@@ -772,6 +774,9 @@ func encodeVarintLds(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *Listener) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -836,6 +841,9 @@ func (m *Listener) Size() (n int) {
 }
 
 func (m *Listener_DeprecatedV1) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.BindToPort != nil {

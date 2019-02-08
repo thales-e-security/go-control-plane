@@ -61,16 +61,6 @@ func (m *OidcClient) Validate() error {
 		}
 	}
 
-	if v, ok := interface{}(m.GetJwksUri()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return OidcClientValidationError{
-				Field:  "JwksUri",
-				Reason: "embedded message failed validation",
-				Cause:  err,
-			}
-		}
-	}
-
 	if len(m.GetClientId()) < 1 {
 		return OidcClientValidationError{
 			Field:  "ClientId",
@@ -83,6 +73,40 @@ func (m *OidcClient) Validate() error {
 			Field:  "ClientSecret",
 			Reason: "value length must be at least 1 bytes",
 		}
+	}
+
+	switch m.JwksSourceSpecifier.(type) {
+
+	case *OidcClient_JwksUri:
+
+		if v, ok := interface{}(m.GetJwksUri()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return OidcClientValidationError{
+					Field:  "JwksUri",
+					Reason: "embedded message failed validation",
+					Cause:  err,
+				}
+			}
+		}
+
+	case *OidcClient_LocalJwks:
+
+		if v, ok := interface{}(m.GetLocalJwks()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return OidcClientValidationError{
+					Field:  "LocalJwks",
+					Reason: "embedded message failed validation",
+					Cause:  err,
+				}
+			}
+		}
+
+	default:
+		return OidcClientValidationError{
+			Field:  "JwksSourceSpecifier",
+			Reason: "value is required",
+		}
+
 	}
 
 	return nil
@@ -180,6 +204,64 @@ func (e MatchValidationError) Error() string {
 
 var _ error = MatchValidationError{}
 
+// Validate checks the field values on StateStore with the rules defined in the
+// proto definition for this message. If any rules are violated, an error is returned.
+func (m *StateStore) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if _, ok := StateStore_StoreType_name[int32(m.GetStoreType())]; !ok {
+		return StateStoreValidationError{
+			Field:  "StoreType",
+			Reason: "value must be one of the defined enum values",
+		}
+	}
+
+	if v, ok := interface{}(m.GetRedis()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return StateStoreValidationError{
+				Field:  "Redis",
+				Reason: "embedded message failed validation",
+				Cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// StateStoreValidationError is the validation error returned by
+// StateStore.Validate if the designated constraints aren't met.
+type StateStoreValidationError struct {
+	Field  string
+	Reason string
+	Cause  error
+	Key    bool
+}
+
+// Error satisfies the builtin error interface
+func (e StateStoreValidationError) Error() string {
+	cause := ""
+	if e.Cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.Cause)
+	}
+
+	key := ""
+	if e.Key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStateStore.%s: %s%s",
+		key,
+		e.Field,
+		e.Reason,
+		cause)
+}
+
+var _ error = StateStoreValidationError{}
+
 // Validate checks the field values on OidcConfig with the rules defined in the
 // proto definition for this message. If any rules are violated, an error is returned.
 func (m *OidcConfig) Validate() error {
@@ -197,6 +279,16 @@ func (m *OidcConfig) Validate() error {
 		if err := v.Validate(); err != nil {
 			return OidcConfigValidationError{
 				Field:  "Binding",
+				Reason: "embedded message failed validation",
+				Cause:  err,
+			}
+		}
+	}
+
+	if v, ok := interface{}(m.GetStateStore()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return OidcConfigValidationError{
+				Field:  "StateStore",
 				Reason: "embedded message failed validation",
 				Cause:  err,
 			}
@@ -282,3 +374,52 @@ func (e Match_CriteriaValidationError) Error() string {
 }
 
 var _ error = Match_CriteriaValidationError{}
+
+// Validate checks the field values on StateStore_RedisConnection with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *StateStore_RedisConnection) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if len(m.GetCluster()) < 1 {
+		return StateStore_RedisConnectionValidationError{
+			Field:  "Cluster",
+			Reason: "value length must be at least 1 bytes",
+		}
+	}
+
+	return nil
+}
+
+// StateStore_RedisConnectionValidationError is the validation error returned
+// by StateStore_RedisConnection.Validate if the designated constraints aren't met.
+type StateStore_RedisConnectionValidationError struct {
+	Field  string
+	Reason string
+	Cause  error
+	Key    bool
+}
+
+// Error satisfies the builtin error interface
+func (e StateStore_RedisConnectionValidationError) Error() string {
+	cause := ""
+	if e.Cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.Cause)
+	}
+
+	key := ""
+	if e.Key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStateStore_RedisConnection.%s: %s%s",
+		key,
+		e.Field,
+		e.Reason,
+		cause)
+}
+
+var _ error = StateStore_RedisConnectionValidationError{}

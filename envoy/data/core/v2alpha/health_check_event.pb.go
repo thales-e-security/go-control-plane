@@ -88,14 +88,14 @@ func (HealthCheckerType) EnumDescriptor() ([]byte, []int) {
 
 type HealthCheckEvent struct {
 	HealthCheckerType HealthCheckerType `protobuf:"varint,1,opt,name=health_checker_type,json=healthCheckerType,proto3,enum=envoy.data.core.v2alpha.HealthCheckerType" json:"health_checker_type,omitempty"`
-	Host              *core.Address     `protobuf:"bytes,2,opt,name=host" json:"host,omitempty"`
+	Host              *core.Address     `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`
 	ClusterName       string            `protobuf:"bytes,3,opt,name=cluster_name,json=clusterName,proto3" json:"cluster_name,omitempty"`
 	// Types that are valid to be assigned to Event:
 	//	*HealthCheckEvent_EjectUnhealthyEvent
 	//	*HealthCheckEvent_AddHealthyEvent
 	Event isHealthCheckEvent_Event `protobuf_oneof:"event"`
 	// Timestamp for event.
-	Timestamp            *time.Time `protobuf:"bytes,6,opt,name=timestamp,stdtime" json:"timestamp,omitempty"`
+	Timestamp            *time.Time `protobuf:"bytes,6,opt,name=timestamp,proto3,stdtime" json:"timestamp,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
 	XXX_unrecognized     []byte     `json:"-"`
 	XXX_sizecache        int32      `json:"-"`
@@ -142,10 +142,10 @@ type isHealthCheckEvent_Event interface {
 }
 
 type HealthCheckEvent_EjectUnhealthyEvent struct {
-	EjectUnhealthyEvent *HealthCheckEjectUnhealthy `protobuf:"bytes,4,opt,name=eject_unhealthy_event,json=ejectUnhealthyEvent,oneof"`
+	EjectUnhealthyEvent *HealthCheckEjectUnhealthy `protobuf:"bytes,4,opt,name=eject_unhealthy_event,json=ejectUnhealthyEvent,proto3,oneof"`
 }
 type HealthCheckEvent_AddHealthyEvent struct {
-	AddHealthyEvent *HealthCheckAddHealthy `protobuf:"bytes,5,opt,name=add_healthy_event,json=addHealthyEvent,oneof"`
+	AddHealthyEvent *HealthCheckAddHealthy `protobuf:"bytes,5,opt,name=add_healthy_event,json=addHealthyEvent,proto3,oneof"`
 }
 
 func (*HealthCheckEvent_EjectUnhealthyEvent) isHealthCheckEvent_Event() {}
@@ -684,6 +684,9 @@ func encodeVarintHealthCheckEvent(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *HealthCheckEvent) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.HealthCheckerType != 0 {
@@ -711,6 +714,9 @@ func (m *HealthCheckEvent) Size() (n int) {
 }
 
 func (m *HealthCheckEvent_EjectUnhealthyEvent) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.EjectUnhealthyEvent != nil {
@@ -720,6 +726,9 @@ func (m *HealthCheckEvent_EjectUnhealthyEvent) Size() (n int) {
 	return n
 }
 func (m *HealthCheckEvent_AddHealthyEvent) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.AddHealthyEvent != nil {
@@ -729,6 +738,9 @@ func (m *HealthCheckEvent_AddHealthyEvent) Size() (n int) {
 	return n
 }
 func (m *HealthCheckEjectUnhealthy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.FailureType != 0 {
@@ -741,6 +753,9 @@ func (m *HealthCheckEjectUnhealthy) Size() (n int) {
 }
 
 func (m *HealthCheckAddHealthy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.FirstCheck {

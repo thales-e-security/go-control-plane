@@ -34,7 +34,7 @@ type MongoProxy struct {
 	// applied to the following MongoDB operations: Query, Insert, GetMore,
 	// and KillCursors. Once an active delay is in progress, all incoming
 	// data up until the timer event fires will be a part of the delay.
-	Delay                *v2.FaultDelay `protobuf:"bytes,3,opt,name=delay" json:"delay,omitempty"`
+	Delay                *v2.FaultDelay `protobuf:"bytes,3,opt,name=delay,proto3" json:"delay,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
 	XXX_unrecognized     []byte         `json:"-"`
 	XXX_sizecache        int32          `json:"-"`
@@ -150,6 +150,9 @@ func encodeVarintMongoProxy(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *MongoProxy) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.StatPrefix)

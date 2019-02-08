@@ -23,6 +23,32 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+type StateStore_StoreType int32
+
+const (
+	// Stores state in local memory
+	// Primarily used for testing
+	StateStore_IN_MEMORY StateStore_StoreType = 0
+	// Stores state in Redis
+	StateStore_REDIS StateStore_StoreType = 1
+)
+
+var StateStore_StoreType_name = map[int32]string{
+	0: "IN_MEMORY",
+	1: "REDIS",
+}
+var StateStore_StoreType_value = map[string]int32{
+	"IN_MEMORY": 0,
+	"REDIS":     1,
+}
+
+func (x StateStore_StoreType) String() string {
+	return proto.EnumName(StateStore_StoreType_name, int32(x))
+}
+func (StateStore_StoreType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_config_90ae9dd959793f4d, []int{2, 0}
+}
+
 // This message specifies the configuration of an OpenID Connect Client or relying-party (RP).
 // See https://openid.net/specs/openid-connect-core-1_0.html for more details.
 //
@@ -46,17 +72,20 @@ const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 // [#not-implemented-hide:]
 type OidcClient struct {
 	// The authorization endpoint where a user can be authenticated.
-	AuthorizationEndpoint *core.HttpUri `protobuf:"bytes,1,opt,name=authorization_endpoint,json=authorizationEndpoint" json:"authorization_endpoint,omitempty"`
+	AuthorizationEndpoint *core.HttpUri `protobuf:"bytes,1,opt,name=authorization_endpoint,json=authorizationEndpoint,proto3" json:"authorization_endpoint,omitempty"`
 	// The token endpoint where authorizaion and ID tokens can be redeemed.
-	TokenEndpoint *core.HttpUri `protobuf:"bytes,2,opt,name=token_endpoint,json=tokenEndpoint" json:"token_endpoint,omitempty"`
-	// The JWKS endpoint where an OpenID Connect provider's signing keys can be obtained.
-	JwksUri *core.HttpUri `protobuf:"bytes,3,opt,name=jwks_uri,json=jwksUri" json:"jwks_uri,omitempty"`
+	TokenEndpoint *core.HttpUri `protobuf:"bytes,2,opt,name=token_endpoint,json=tokenEndpoint,proto3" json:"token_endpoint,omitempty"`
+	// Types that are valid to be assigned to JwksSourceSpecifier:
+	//	*OidcClient_JwksUri
+	//	*OidcClient_LocalJwks
+	JwksSourceSpecifier isOidcClient_JwksSourceSpecifier `protobuf_oneof:"jwks_source_specifier"`
 	// The unique client identity.
-	ClientId string `protobuf:"bytes,4,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	ClientId string `protobuf:"bytes,5,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 	// The shared client secret. This field is security sensitive.
-	ClientSecret string `protobuf:"bytes,5,opt,name=client_secret,json=clientSecret,proto3" json:"client_secret,omitempty"`
-	// OpenID Connect scopes to use when requesting a token. If not specified, the openid scope will always be requested.
-	Scopes               []string `protobuf:"bytes,6,rep,name=scopes" json:"scopes,omitempty"`
+	ClientSecret string `protobuf:"bytes,6,opt,name=client_secret,json=clientSecret,proto3" json:"client_secret,omitempty"`
+	// OpenID Connect scopes to use when requesting a token. If not specified, the openid scope will
+	// always be requested.
+	Scopes               []string `protobuf:"bytes,7,rep,name=scopes,proto3" json:"scopes,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -66,7 +95,7 @@ func (m *OidcClient) Reset()         { *m = OidcClient{} }
 func (m *OidcClient) String() string { return proto.CompactTextString(m) }
 func (*OidcClient) ProtoMessage()    {}
 func (*OidcClient) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_1209d626ec6bedf1, []int{0}
+	return fileDescriptor_config_90ae9dd959793f4d, []int{0}
 }
 func (m *OidcClient) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -95,6 +124,29 @@ func (m *OidcClient) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_OidcClient proto.InternalMessageInfo
 
+type isOidcClient_JwksSourceSpecifier interface {
+	isOidcClient_JwksSourceSpecifier()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
+
+type OidcClient_JwksUri struct {
+	JwksUri *core.HttpUri `protobuf:"bytes,3,opt,name=jwks_uri,json=jwksUri,proto3,oneof"`
+}
+type OidcClient_LocalJwks struct {
+	LocalJwks *core.DataSource `protobuf:"bytes,4,opt,name=local_jwks,json=localJwks,proto3,oneof"`
+}
+
+func (*OidcClient_JwksUri) isOidcClient_JwksSourceSpecifier()   {}
+func (*OidcClient_LocalJwks) isOidcClient_JwksSourceSpecifier() {}
+
+func (m *OidcClient) GetJwksSourceSpecifier() isOidcClient_JwksSourceSpecifier {
+	if m != nil {
+		return m.JwksSourceSpecifier
+	}
+	return nil
+}
+
 func (m *OidcClient) GetAuthorizationEndpoint() *core.HttpUri {
 	if m != nil {
 		return m.AuthorizationEndpoint
@@ -110,8 +162,15 @@ func (m *OidcClient) GetTokenEndpoint() *core.HttpUri {
 }
 
 func (m *OidcClient) GetJwksUri() *core.HttpUri {
-	if m != nil {
-		return m.JwksUri
+	if x, ok := m.GetJwksSourceSpecifier().(*OidcClient_JwksUri); ok {
+		return x.JwksUri
+	}
+	return nil
+}
+
+func (m *OidcClient) GetLocalJwks() *core.DataSource {
+	if x, ok := m.GetJwksSourceSpecifier().(*OidcClient_LocalJwks); ok {
+		return x.LocalJwks
 	}
 	return nil
 }
@@ -135,6 +194,80 @@ func (m *OidcClient) GetScopes() []string {
 		return m.Scopes
 	}
 	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*OidcClient) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _OidcClient_OneofMarshaler, _OidcClient_OneofUnmarshaler, _OidcClient_OneofSizer, []interface{}{
+		(*OidcClient_JwksUri)(nil),
+		(*OidcClient_LocalJwks)(nil),
+	}
+}
+
+func _OidcClient_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*OidcClient)
+	// jwks_source_specifier
+	switch x := m.JwksSourceSpecifier.(type) {
+	case *OidcClient_JwksUri:
+		_ = b.EncodeVarint(3<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.JwksUri); err != nil {
+			return err
+		}
+	case *OidcClient_LocalJwks:
+		_ = b.EncodeVarint(4<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.LocalJwks); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("OidcClient.JwksSourceSpecifier has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _OidcClient_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*OidcClient)
+	switch tag {
+	case 3: // jwks_source_specifier.jwks_uri
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(core.HttpUri)
+		err := b.DecodeMessage(msg)
+		m.JwksSourceSpecifier = &OidcClient_JwksUri{msg}
+		return true, err
+	case 4: // jwks_source_specifier.local_jwks
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(core.DataSource)
+		err := b.DecodeMessage(msg)
+		m.JwksSourceSpecifier = &OidcClient_LocalJwks{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _OidcClient_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*OidcClient)
+	// jwks_source_specifier
+	switch x := m.JwksSourceSpecifier.(type) {
+	case *OidcClient_JwksUri:
+		s := proto.Size(x.JwksUri)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *OidcClient_LocalJwks:
+		s := proto.Size(x.LocalJwks)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
 }
 
 // A Match maps an incoming request to an IdP based on a specified HTTP header and it's value.
@@ -162,9 +295,9 @@ func (m *OidcClient) GetScopes() []string {
 // [#not-implemented-hide:]
 type Match struct {
 	// Details of the registered external OpenID Connect Identity Provider (IdP).
-	Idp *OidcClient `protobuf:"bytes,1,opt,name=idp" json:"idp,omitempty"`
+	Idp *OidcClient `protobuf:"bytes,1,opt,name=idp,proto3" json:"idp,omitempty"`
 	// Criteria by which to match against
-	Criteria             *Match_Criteria `protobuf:"bytes,2,opt,name=criteria" json:"criteria,omitempty"`
+	Criteria             *Match_Criteria `protobuf:"bytes,2,opt,name=criteria,proto3" json:"criteria,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
 	XXX_unrecognized     []byte          `json:"-"`
 	XXX_sizecache        int32           `json:"-"`
@@ -174,7 +307,7 @@ func (m *Match) Reset()         { *m = Match{} }
 func (m *Match) String() string { return proto.CompactTextString(m) }
 func (*Match) ProtoMessage()    {}
 func (*Match) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_1209d626ec6bedf1, []int{1}
+	return fileDescriptor_config_90ae9dd959793f4d, []int{1}
 }
 func (m *Match) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -231,7 +364,7 @@ func (m *Match_Criteria) Reset()         { *m = Match_Criteria{} }
 func (m *Match_Criteria) String() string { return proto.CompactTextString(m) }
 func (*Match_Criteria) ProtoMessage()    {}
 func (*Match_Criteria) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_1209d626ec6bedf1, []int{1, 0}
+	return fileDescriptor_config_90ae9dd959793f4d, []int{1, 0}
 }
 func (m *Match_Criteria) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -274,12 +407,117 @@ func (m *Match_Criteria) GetValue() string {
 	return ""
 }
 
+type StateStore struct {
+	StoreType            StateStore_StoreType        `protobuf:"varint,1,opt,name=store_type,json=storeType,proto3,enum=envoy.config.filter.http.oidc.v1alpha.StateStore_StoreType" json:"store_type,omitempty"`
+	Redis                *StateStore_RedisConnection `protobuf:"bytes,2,opt,name=redis,proto3" json:"redis,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *StateStore) Reset()         { *m = StateStore{} }
+func (m *StateStore) String() string { return proto.CompactTextString(m) }
+func (*StateStore) ProtoMessage()    {}
+func (*StateStore) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_90ae9dd959793f4d, []int{2}
+}
+func (m *StateStore) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *StateStore) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_StateStore.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *StateStore) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StateStore.Merge(dst, src)
+}
+func (m *StateStore) XXX_Size() int {
+	return m.Size()
+}
+func (m *StateStore) XXX_DiscardUnknown() {
+	xxx_messageInfo_StateStore.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StateStore proto.InternalMessageInfo
+
+func (m *StateStore) GetStoreType() StateStore_StoreType {
+	if m != nil {
+		return m.StoreType
+	}
+	return StateStore_IN_MEMORY
+}
+
+func (m *StateStore) GetRedis() *StateStore_RedisConnection {
+	if m != nil {
+		return m.Redis
+	}
+	return nil
+}
+
+type StateStore_RedisConnection struct {
+	// Name of cluster from cluster manager.
+	Cluster              string   `protobuf:"bytes,1,opt,name=cluster,proto3" json:"cluster,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *StateStore_RedisConnection) Reset()         { *m = StateStore_RedisConnection{} }
+func (m *StateStore_RedisConnection) String() string { return proto.CompactTextString(m) }
+func (*StateStore_RedisConnection) ProtoMessage()    {}
+func (*StateStore_RedisConnection) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_90ae9dd959793f4d, []int{2, 0}
+}
+func (m *StateStore_RedisConnection) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *StateStore_RedisConnection) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_StateStore_RedisConnection.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *StateStore_RedisConnection) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StateStore_RedisConnection.Merge(dst, src)
+}
+func (m *StateStore_RedisConnection) XXX_Size() int {
+	return m.Size()
+}
+func (m *StateStore_RedisConnection) XXX_DiscardUnknown() {
+	xxx_messageInfo_StateStore_RedisConnection.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StateStore_RedisConnection proto.InternalMessageInfo
+
+func (m *StateStore_RedisConnection) GetCluster() string {
+	if m != nil {
+		return m.Cluster
+	}
+	return ""
+}
+
 // This message specifies the configuration of an OpenID Connect filter that allows:
-//   1) Envoy to act as a client in the Authorization Code Flow (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth) so to
+//   1) Envoy to act as a client in the Authorization Code Flow
+//   (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth) so to
 //     a) Ascertain an identity provider for authenticating the user based on an HTTP header.
 //     b) Acquire transparently or otherwise an identity token representing an end-user.
 //     c) Derive from the acquired identity token a set of session tokens.
-//     d) The generation of a session protection cookie, called a binding, to mitigate cross-site request forgery and Person-in-the-browser
+//     d) The generation of a session protection cookie, called a binding, to mitigate cross-site
+//     request forgery and Person-in-the-browser
 //        (PiTB, MiTB) attacks.
 //
 // Example:
@@ -321,7 +559,7 @@ func (m *Match_Criteria) GetValue() string {
 //           value: tenant2.acme.com
 //     authentication_callback: "/oidc/authenticate"
 //     landing_page: "/home"
-//     token_binding:
+//     binding:
 //       secret: Mb07unY1jd4h2s5wUSO9KJzhqjVTazXMWCp4OAiiGko=
 //       token: __Secure-acme-session-cookie
 //       binding: x-xsrf-token
@@ -330,25 +568,28 @@ func (m *Match_Criteria) GetValue() string {
 type OidcConfig struct {
 	// An ordered map of Match rules which maps a request to an IDP.
 	// If a request can be matched by more than rule then the first in the list will be chosen.
-	Matches map[string]*Match `protobuf:"bytes,1,rep,name=matches" json:"matches,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value"`
+	Matches map[string]*Match `protobuf:"bytes,1,rep,name=matches,proto3" json:"matches,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// The path that receives an authentication reply from an OIDC provider.
 	// Values for this should be chosen to be unique and so not to clash with services being fronted.
-	// The value of this field should be an absolute path value and not include a host or port specifier.
+	// The value of this field should be an absolute path value and not include a host or port
+	// specifier.
 	AuthenticationCallback string `protobuf:"bytes,2,opt,name=authentication_callback,json=authenticationCallback,proto3" json:"authentication_callback,omitempty"`
 	// The landing page to redirect to after successful authentication.
 	LandingPage string `protobuf:"bytes,3,opt,name=landing_page,json=landingPage,proto3" json:"landing_page,omitempty"`
 	// Session token configuration.
-	Binding              *v1alpha.TokenBinding `protobuf:"bytes,4,opt,name=binding" json:"binding,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
-	XXX_unrecognized     []byte                `json:"-"`
-	XXX_sizecache        int32                 `json:"-"`
+	Binding *v1alpha.TokenBinding `protobuf:"bytes,4,opt,name=binding,proto3" json:"binding,omitempty"`
+	// State store configuration
+	StateStore           *StateStore `protobuf:"bytes,5,opt,name=state_store,json=stateStore,proto3" json:"state_store,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
 func (m *OidcConfig) Reset()         { *m = OidcConfig{} }
 func (m *OidcConfig) String() string { return proto.CompactTextString(m) }
 func (*OidcConfig) ProtoMessage()    {}
 func (*OidcConfig) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_1209d626ec6bedf1, []int{2}
+	return fileDescriptor_config_90ae9dd959793f4d, []int{3}
 }
 func (m *OidcConfig) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -405,12 +646,22 @@ func (m *OidcConfig) GetBinding() *v1alpha.TokenBinding {
 	return nil
 }
 
+func (m *OidcConfig) GetStateStore() *StateStore {
+	if m != nil {
+		return m.StateStore
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*OidcClient)(nil), "envoy.config.filter.http.oidc.v1alpha.OidcClient")
 	proto.RegisterType((*Match)(nil), "envoy.config.filter.http.oidc.v1alpha.Match")
 	proto.RegisterType((*Match_Criteria)(nil), "envoy.config.filter.http.oidc.v1alpha.Match.Criteria")
+	proto.RegisterType((*StateStore)(nil), "envoy.config.filter.http.oidc.v1alpha.StateStore")
+	proto.RegisterType((*StateStore_RedisConnection)(nil), "envoy.config.filter.http.oidc.v1alpha.StateStore.RedisConnection")
 	proto.RegisterType((*OidcConfig)(nil), "envoy.config.filter.http.oidc.v1alpha.OidcConfig")
 	proto.RegisterMapType((map[string]*Match)(nil), "envoy.config.filter.http.oidc.v1alpha.OidcConfig.MatchesEntry")
+	proto.RegisterEnum("envoy.config.filter.http.oidc.v1alpha.StateStore_StoreType", StateStore_StoreType_name, StateStore_StoreType_value)
 }
 func (m *OidcClient) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -447,31 +698,28 @@ func (m *OidcClient) MarshalTo(dAtA []byte) (int, error) {
 		}
 		i += n2
 	}
-	if m.JwksUri != nil {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintConfig(dAtA, i, uint64(m.JwksUri.Size()))
-		n3, err := m.JwksUri.MarshalTo(dAtA[i:])
+	if m.JwksSourceSpecifier != nil {
+		nn3, err := m.JwksSourceSpecifier.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n3
+		i += nn3
 	}
 	if len(m.ClientId) > 0 {
-		dAtA[i] = 0x22
+		dAtA[i] = 0x2a
 		i++
 		i = encodeVarintConfig(dAtA, i, uint64(len(m.ClientId)))
 		i += copy(dAtA[i:], m.ClientId)
 	}
 	if len(m.ClientSecret) > 0 {
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x32
 		i++
 		i = encodeVarintConfig(dAtA, i, uint64(len(m.ClientSecret)))
 		i += copy(dAtA[i:], m.ClientSecret)
 	}
 	if len(m.Scopes) > 0 {
 		for _, s := range m.Scopes {
-			dAtA[i] = 0x32
+			dAtA[i] = 0x3a
 			i++
 			l = len(s)
 			for l >= 1<<7 {
@@ -490,6 +738,34 @@ func (m *OidcClient) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *OidcClient_JwksUri) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.JwksUri != nil {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintConfig(dAtA, i, uint64(m.JwksUri.Size()))
+		n4, err := m.JwksUri.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n4
+	}
+	return i, nil
+}
+func (m *OidcClient_LocalJwks) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.LocalJwks != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintConfig(dAtA, i, uint64(m.LocalJwks.Size()))
+		n5, err := m.LocalJwks.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	return i, nil
+}
 func (m *Match) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -509,21 +785,21 @@ func (m *Match) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintConfig(dAtA, i, uint64(m.Idp.Size()))
-		n4, err := m.Idp.MarshalTo(dAtA[i:])
+		n6, err := m.Idp.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n4
+		i += n6
 	}
 	if m.Criteria != nil {
 		dAtA[i] = 0x12
 		i++
 		i = encodeVarintConfig(dAtA, i, uint64(m.Criteria.Size()))
-		n5, err := m.Criteria.MarshalTo(dAtA[i:])
+		n7, err := m.Criteria.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n5
+		i += n7
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -557,6 +833,69 @@ func (m *Match_Criteria) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintConfig(dAtA, i, uint64(len(m.Value)))
 		i += copy(dAtA[i:], m.Value)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *StateStore) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *StateStore) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.StoreType != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintConfig(dAtA, i, uint64(m.StoreType))
+	}
+	if m.Redis != nil {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintConfig(dAtA, i, uint64(m.Redis.Size()))
+		n8, err := m.Redis.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n8
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *StateStore_RedisConnection) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *StateStore_RedisConnection) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Cluster) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintConfig(dAtA, i, uint64(len(m.Cluster)))
+		i += copy(dAtA[i:], m.Cluster)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -599,11 +938,11 @@ func (m *OidcConfig) MarshalTo(dAtA []byte) (int, error) {
 				dAtA[i] = 0x12
 				i++
 				i = encodeVarintConfig(dAtA, i, uint64(v.Size()))
-				n6, err := v.MarshalTo(dAtA[i:])
+				n9, err := v.MarshalTo(dAtA[i:])
 				if err != nil {
 					return 0, err
 				}
-				i += n6
+				i += n9
 			}
 		}
 	}
@@ -623,11 +962,21 @@ func (m *OidcConfig) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x22
 		i++
 		i = encodeVarintConfig(dAtA, i, uint64(m.Binding.Size()))
-		n7, err := m.Binding.MarshalTo(dAtA[i:])
+		n10, err := m.Binding.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n7
+		i += n10
+	}
+	if m.StateStore != nil {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintConfig(dAtA, i, uint64(m.StateStore.Size()))
+		n11, err := m.StateStore.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n11
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -645,6 +994,9 @@ func encodeVarintConfig(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *OidcClient) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.AuthorizationEndpoint != nil {
@@ -655,9 +1007,8 @@ func (m *OidcClient) Size() (n int) {
 		l = m.TokenEndpoint.Size()
 		n += 1 + l + sovConfig(uint64(l))
 	}
-	if m.JwksUri != nil {
-		l = m.JwksUri.Size()
-		n += 1 + l + sovConfig(uint64(l))
+	if m.JwksSourceSpecifier != nil {
+		n += m.JwksSourceSpecifier.Size()
 	}
 	l = len(m.ClientId)
 	if l > 0 {
@@ -679,7 +1030,34 @@ func (m *OidcClient) Size() (n int) {
 	return n
 }
 
+func (m *OidcClient_JwksUri) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.JwksUri != nil {
+		l = m.JwksUri.Size()
+		n += 1 + l + sovConfig(uint64(l))
+	}
+	return n
+}
+func (m *OidcClient_LocalJwks) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.LocalJwks != nil {
+		l = m.LocalJwks.Size()
+		n += 1 + l + sovConfig(uint64(l))
+	}
+	return n
+}
 func (m *Match) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Idp != nil {
@@ -697,6 +1075,9 @@ func (m *Match) Size() (n int) {
 }
 
 func (m *Match_Criteria) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Header)
@@ -713,7 +1094,45 @@ func (m *Match_Criteria) Size() (n int) {
 	return n
 }
 
+func (m *StateStore) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.StoreType != 0 {
+		n += 1 + sovConfig(uint64(m.StoreType))
+	}
+	if m.Redis != nil {
+		l = m.Redis.Size()
+		n += 1 + l + sovConfig(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *StateStore_RedisConnection) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Cluster)
+	if l > 0 {
+		n += 1 + l + sovConfig(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *OidcConfig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Matches) > 0 {
@@ -739,6 +1158,10 @@ func (m *OidcConfig) Size() (n int) {
 	}
 	if m.Binding != nil {
 		l = m.Binding.Size()
+		n += 1 + l + sovConfig(uint64(l))
+	}
+	if m.StateStore != nil {
+		l = m.StateStore.Size()
 		n += 1 + l + sovConfig(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -881,14 +1304,45 @@ func (m *OidcClient) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.JwksUri == nil {
-				m.JwksUri = &core.HttpUri{}
-			}
-			if err := m.JwksUri.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			v := &core.HttpUri{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			m.JwksSourceSpecifier = &OidcClient_JwksUri{v}
 			iNdEx = postIndex
 		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LocalJwks", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfig
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthConfig
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &core.DataSource{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.JwksSourceSpecifier = &OidcClient_LocalJwks{v}
+			iNdEx = postIndex
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
 			}
@@ -917,7 +1371,7 @@ func (m *OidcClient) Unmarshal(dAtA []byte) error {
 			}
 			m.ClientId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 5:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ClientSecret", wireType)
 			}
@@ -946,7 +1400,7 @@ func (m *OidcClient) Unmarshal(dAtA []byte) error {
 			}
 			m.ClientSecret = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 6:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Scopes", wireType)
 			}
@@ -1223,6 +1677,189 @@ func (m *Match_Criteria) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *StateStore) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowConfig
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StateStore: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StateStore: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StoreType", wireType)
+			}
+			m.StoreType = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfig
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.StoreType |= (StateStore_StoreType(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Redis", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfig
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthConfig
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Redis == nil {
+				m.Redis = &StateStore_RedisConnection{}
+			}
+			if err := m.Redis.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipConfig(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthConfig
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *StateStore_RedisConnection) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowConfig
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RedisConnection: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RedisConnection: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cluster", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfig
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfig
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Cluster = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipConfig(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthConfig
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *OidcConfig) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1466,6 +2103,39 @@ func (m *OidcConfig) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StateStore", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfig
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthConfig
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.StateStore == nil {
+				m.StateStore = &StateStore{}
+			}
+			if err := m.StateStore.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipConfig(dAtA[iNdEx:])
@@ -1594,45 +2264,58 @@ var (
 )
 
 func init() {
-	proto.RegisterFile("envoy/config/filter/http/oidc/v1alpha/config.proto", fileDescriptor_config_1209d626ec6bedf1)
+	proto.RegisterFile("envoy/config/filter/http/oidc/v1alpha/config.proto", fileDescriptor_config_90ae9dd959793f4d)
 }
 
-var fileDescriptor_config_1209d626ec6bedf1 = []byte{
-	// 562 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0x4d, 0x6f, 0x13, 0x31,
-	0x10, 0xd5, 0x66, 0xfb, 0x91, 0x75, 0x52, 0x84, 0x2c, 0x68, 0x57, 0x39, 0x44, 0x4b, 0x24, 0x50,
-	0x0e, 0xc8, 0xab, 0x2e, 0xaa, 0xa8, 0x90, 0x40, 0x22, 0x51, 0x25, 0x38, 0x54, 0xd0, 0x85, 0x4a,
-	0xdc, 0x22, 0xc7, 0xeb, 0x66, 0x4d, 0xb6, 0xf6, 0xca, 0xeb, 0x2c, 0x0a, 0x3f, 0x80, 0x1f, 0xc5,
-	0x89, 0x23, 0xdc, 0xb8, 0x72, 0x43, 0xb9, 0xf1, 0x2f, 0x90, 0x3f, 0x12, 0xd2, 0x0a, 0x68, 0x7b,
-	0xf3, 0x78, 0xe6, 0xbd, 0x79, 0x33, 0x7e, 0x06, 0x09, 0xe5, 0xb5, 0x98, 0xc7, 0x44, 0xf0, 0x33,
-	0x36, 0x89, 0xcf, 0x58, 0xa1, 0xa8, 0x8c, 0x73, 0xa5, 0xca, 0x58, 0xb0, 0x8c, 0xc4, 0xf5, 0x3e,
-	0x2e, 0xca, 0x1c, 0xbb, 0x3c, 0x2a, 0xa5, 0x50, 0x02, 0xde, 0x37, 0x18, 0xe4, 0xee, 0x2c, 0x06,
-	0x69, 0x0c, 0xd2, 0x18, 0xe4, 0x30, 0x9d, 0xbd, 0x1a, 0x17, 0x2c, 0xc3, 0x8a, 0xc6, 0xcb, 0x83,
-	0xc5, 0x77, 0x22, 0xdb, 0x13, 0x97, 0x2c, 0xae, 0x93, 0x98, 0x08, 0x49, 0x4d, 0xc7, 0xd1, 0x4c,
-	0x32, 0x57, 0xf1, 0xf4, 0x9f, 0xaa, 0x2a, 0x5a, 0x55, 0x4c, 0xf0, 0xd1, 0x39, 0xe6, 0x78, 0x42,
-	0xe5, 0x5f, 0x05, 0xf6, 0xbe, 0x35, 0x00, 0x78, 0xc5, 0x32, 0x32, 0x2c, 0x18, 0xe5, 0x0a, 0x9e,
-	0x80, 0x5d, 0x3c, 0x53, 0xb9, 0x90, 0xec, 0x23, 0x56, 0x1a, 0x4c, 0x79, 0x56, 0x0a, 0xc6, 0x55,
-	0xe8, 0x45, 0x5e, 0xbf, 0x95, 0x74, 0x90, 0x1d, 0x08, 0x97, 0x0c, 0xd5, 0x09, 0xd2, 0x82, 0xd0,
-	0x0b, 0xa5, 0xca, 0x53, 0xc9, 0xd2, 0xbb, 0x17, 0x90, 0x47, 0x0e, 0x08, 0x9f, 0x83, 0x5b, 0x4a,
-	0x4c, 0xe9, 0x1a, 0x55, 0xe3, 0x4a, 0xaa, 0x1d, 0x83, 0x58, 0x51, 0x1c, 0x80, 0xe6, 0xfb, 0x0f,
-	0xd3, 0x4a, 0x4f, 0x1d, 0xfa, 0x57, 0x82, 0xb7, 0x75, 0xed, 0xa9, 0x64, 0xf0, 0x01, 0x08, 0x88,
-	0x19, 0x6b, 0xc4, 0xb2, 0x70, 0x23, 0xf2, 0xfa, 0xc1, 0x20, 0xf8, 0xfc, 0xeb, 0x8b, 0xbf, 0x21,
-	0x1b, 0x91, 0x97, 0x36, 0x6d, 0xee, 0x65, 0x06, 0x11, 0xd8, 0x71, 0x75, 0x15, 0x25, 0x92, 0xaa,
-	0x70, 0xf3, 0x72, 0x6d, 0xdb, 0xe6, 0xdf, 0x98, 0x34, 0xdc, 0x05, 0x5b, 0x15, 0x11, 0x25, 0xad,
-	0xc2, 0xad, 0xc8, 0xef, 0x07, 0xa9, 0x8b, 0x7a, 0x3f, 0x3c, 0xb0, 0x79, 0x8c, 0x15, 0xc9, 0xe1,
-	0x10, 0xf8, 0x2c, 0x2b, 0xdd, 0xce, 0xf6, 0xd1, 0xb5, 0x4c, 0x80, 0xfe, 0x3c, 0x43, 0xaa, 0xd1,
-	0xf0, 0x04, 0x34, 0x89, 0x64, 0x8a, 0x4a, 0x86, 0xdd, 0xca, 0x0e, 0xae, 0xc9, 0x64, 0x44, 0xa0,
-	0xa1, 0x03, 0xa7, 0x2b, 0x9a, 0xce, 0x21, 0x68, 0x2e, 0x6f, 0xf5, 0x14, 0x39, 0xc5, 0x19, 0x95,
-	0x46, 0x66, 0x90, 0xba, 0x08, 0xde, 0x01, 0x9b, 0x35, 0x2e, 0x66, 0xd4, 0xf4, 0x0c, 0x52, 0x1b,
-	0xf4, 0x3e, 0xf9, 0xce, 0x27, 0xa6, 0x35, 0x7c, 0x07, 0xb6, 0xcf, 0x75, 0x13, 0x5a, 0x85, 0x5e,
-	0xe4, 0xf7, 0x5b, 0xc9, 0xb3, 0x9b, 0x0c, 0x69, 0x6b, 0x8e, 0x2d, 0xc1, 0x11, 0x57, 0x72, 0x9e,
-	0x2e, 0xe9, 0xe0, 0x63, 0xb0, 0xa7, 0x7d, 0x44, 0xb9, 0x62, 0xc4, 0x5a, 0x90, 0xe0, 0xa2, 0x18,
-	0x63, 0x32, 0x75, 0x82, 0x76, 0x2f, 0xa6, 0x87, 0x2e, 0x0b, 0xef, 0x81, 0x76, 0x81, 0x79, 0xc6,
-	0xf8, 0x64, 0x54, 0xe2, 0x09, 0x35, 0x46, 0x09, 0xd2, 0x96, 0xbb, 0x7b, 0x8d, 0x27, 0x54, 0xab,
-	0x1e, 0x33, 0x13, 0x1a, 0x3b, 0xfc, 0x57, 0xf5, 0xa5, 0xdf, 0xb3, 0x1a, 0xe0, 0xad, 0x76, 0xe6,
-	0xc0, 0xb2, 0xa4, 0x4b, 0xba, 0x4e, 0x0e, 0xda, 0xeb, 0xe3, 0xc0, 0xdb, 0xc0, 0x9f, 0xd2, 0xb9,
-	0xdb, 0xac, 0x3e, 0xc2, 0xc1, 0xfa, 0x5a, 0x5b, 0xc9, 0xc3, 0x9b, 0x3c, 0xa5, 0x7b, 0x84, 0x27,
-	0x8d, 0x43, 0x6f, 0xd0, 0xfe, 0xba, 0xe8, 0x7a, 0xdf, 0x17, 0x5d, 0xef, 0xe7, 0xa2, 0xeb, 0x8d,
-	0xb7, 0xcc, 0x2f, 0x7e, 0xf4, 0x3b, 0x00, 0x00, 0xff, 0xff, 0x34, 0xdb, 0x83, 0x80, 0x9c, 0x04,
-	0x00, 0x00,
+var fileDescriptor_config_90ae9dd959793f4d = []byte{
+	// 778 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0x4f, 0x8f, 0x1b, 0x35,
+	0x1c, 0xdd, 0xc9, 0x34, 0x9b, 0xcc, 0x2f, 0xd9, 0x12, 0x59, 0x74, 0x1b, 0x45, 0x10, 0x85, 0xa0,
+	0xa2, 0x1c, 0xd0, 0x8c, 0x1a, 0x04, 0xad, 0x40, 0x54, 0x6a, 0xd2, 0x48, 0xbb, 0x48, 0xa1, 0xd4,
+	0x69, 0x05, 0x9c, 0x46, 0x8e, 0xc7, 0x49, 0x4c, 0xa6, 0x33, 0x23, 0xdb, 0x49, 0x15, 0x8e, 0x7c,
+	0x1d, 0xf8, 0x00, 0x88, 0x53, 0x8f, 0x1c, 0xb9, 0xc2, 0x09, 0xed, 0x6d, 0xbf, 0x05, 0xb2, 0xc7,
+	0x93, 0xcd, 0x2e, 0x0b, 0x9b, 0xbd, 0x8c, 0x6c, 0xbf, 0xdf, 0x7b, 0xf3, 0xfc, 0xfb, 0x63, 0xe8,
+	0xb3, 0x64, 0x9d, 0x6e, 0x02, 0x9a, 0x26, 0x33, 0x3e, 0x0f, 0x66, 0x3c, 0x56, 0x4c, 0x04, 0x0b,
+	0xa5, 0xb2, 0x20, 0xe5, 0x11, 0x0d, 0xd6, 0x0f, 0x49, 0x9c, 0x2d, 0x88, 0xc5, 0xfd, 0x4c, 0xa4,
+	0x2a, 0x45, 0x0f, 0x0c, 0xc7, 0xb7, 0x67, 0x39, 0xc7, 0xd7, 0x1c, 0x5f, 0x73, 0x7c, 0xcb, 0x69,
+	0xbd, 0x97, 0x4b, 0x93, 0x8c, 0x07, 0xeb, 0x7e, 0x40, 0x53, 0xc1, 0x82, 0x29, 0x91, 0x2c, 0x17,
+	0x69, 0x75, 0xfe, 0x8d, 0x6a, 0x89, 0x70, 0x25, 0xb8, 0x8d, 0xf8, 0xf2, 0x3f, 0xad, 0x49, 0x26,
+	0x25, 0x4f, 0x93, 0xf0, 0x35, 0x49, 0xc8, 0x9c, 0x89, 0x6b, 0x5d, 0xb6, 0xee, 0xaf, 0x49, 0xcc,
+	0x23, 0xa2, 0x58, 0x50, 0x2c, 0x72, 0xa0, 0xfb, 0xb3, 0x0b, 0xf0, 0x9c, 0x47, 0x74, 0x18, 0x73,
+	0x96, 0x28, 0xf4, 0x02, 0x8e, 0xc9, 0x4a, 0x2d, 0x52, 0xc1, 0x7f, 0x24, 0x4a, 0xab, 0xb2, 0x24,
+	0xca, 0x52, 0x9e, 0xa8, 0xa6, 0xd3, 0x71, 0x7a, 0xb5, 0x7e, 0xcb, 0xcf, 0xaf, 0x4b, 0x32, 0xee,
+	0xaf, 0xfb, 0xbe, 0x76, 0xea, 0x9f, 0x28, 0x95, 0xbd, 0x12, 0x1c, 0xdf, 0xbb, 0xc4, 0x1c, 0x59,
+	0x22, 0x7a, 0x0a, 0x77, 0x55, 0xba, 0x64, 0x3b, 0x52, 0xa5, 0x1b, 0xa5, 0x8e, 0x0c, 0x63, 0x2b,
+	0xf1, 0x08, 0xaa, 0x3f, 0xbc, 0x59, 0x4a, 0x9d, 0x8e, 0xa6, 0x7b, 0x13, 0xf9, 0xe4, 0x00, 0x57,
+	0x74, 0xf4, 0x2b, 0xc1, 0xd1, 0x13, 0x80, 0x38, 0xa5, 0x24, 0x0e, 0xf5, 0x41, 0xf3, 0x8e, 0xa1,
+	0xbe, 0x7f, 0x0d, 0xf5, 0x19, 0x51, 0x64, 0x92, 0xae, 0x04, 0x65, 0x27, 0x07, 0xd8, 0x33, 0x94,
+	0xaf, 0xde, 0x2c, 0x25, 0xfa, 0x08, 0x3c, 0x6a, 0x12, 0x13, 0xf2, 0xa8, 0x59, 0xee, 0x38, 0x3d,
+	0x6f, 0xe0, 0xfd, 0x76, 0xfe, 0xd6, 0xbd, 0x23, 0x4a, 0x1d, 0x07, 0x57, 0x73, 0xec, 0x34, 0x42,
+	0x3e, 0x1c, 0xd9, 0x38, 0xc9, 0xa8, 0x60, 0xaa, 0x79, 0x78, 0x35, 0xb6, 0x9e, 0xe3, 0x13, 0x03,
+	0xa3, 0x63, 0x38, 0x94, 0x34, 0xcd, 0x98, 0x6c, 0x56, 0x3a, 0x6e, 0xcf, 0xc3, 0x76, 0x37, 0x68,
+	0xc3, 0x3d, 0x73, 0x51, 0x69, 0xbc, 0x84, 0x32, 0x63, 0x94, 0xcf, 0x38, 0x13, 0xa8, 0xfc, 0xeb,
+	0xf9, 0x5b, 0xd7, 0xe9, 0xfe, 0xe9, 0x40, 0x79, 0x4c, 0x14, 0x5d, 0xa0, 0x21, 0xb8, 0x3c, 0xca,
+	0x6c, 0x55, 0x1e, 0xfa, 0x7b, 0x35, 0xa1, 0x7f, 0x51, 0x68, 0xac, 0xd9, 0xe8, 0x05, 0x54, 0xa9,
+	0xe0, 0x8a, 0x09, 0x4e, 0x6c, 0x51, 0x3e, 0xdd, 0x53, 0xc9, 0x98, 0xf0, 0x87, 0x96, 0x8c, 0xb7,
+	0x32, 0xad, 0xc7, 0x50, 0x2d, 0x4e, 0xf5, 0x2d, 0x17, 0x8c, 0x44, 0x4c, 0x18, 0x9b, 0x1e, 0xb6,
+	0x3b, 0xf4, 0x2e, 0x94, 0xd7, 0x24, 0x5e, 0x31, 0xf3, 0x4f, 0x0f, 0xe7, 0x9b, 0xee, 0x2f, 0x25,
+	0x80, 0x89, 0x22, 0x8a, 0x4d, 0x54, 0x2a, 0x18, 0x9a, 0x01, 0x48, 0xbd, 0x08, 0xd5, 0x26, 0x63,
+	0x46, 0xe0, 0x6e, 0xff, 0x8b, 0x3d, 0xdd, 0x5d, 0xc8, 0xf8, 0xe6, 0xfb, 0x72, 0x93, 0xb1, 0x01,
+	0xe8, 0x62, 0x94, 0x7f, 0x72, 0x4a, 0x0d, 0x07, 0x7b, 0xb2, 0x38, 0x46, 0xdf, 0x42, 0x59, 0xb0,
+	0x88, 0x4b, 0x9b, 0x80, 0xa7, 0xb7, 0xff, 0x05, 0xd6, 0xf4, 0x61, 0x9a, 0x24, 0x8c, 0xea, 0xc6,
+	0xc7, 0xb9, 0x5e, 0xeb, 0x33, 0x78, 0xe7, 0x0a, 0x82, 0x3e, 0x84, 0x0a, 0x8d, 0x57, 0x52, 0x15,
+	0x19, 0xd9, 0x6d, 0x90, 0x02, 0xe9, 0x3e, 0x00, 0x6f, 0x6b, 0x1a, 0x1d, 0x81, 0x77, 0xfa, 0x75,
+	0x38, 0x1e, 0x8d, 0x9f, 0xe3, 0xef, 0x1b, 0x07, 0xc8, 0x83, 0x32, 0x1e, 0x3d, 0x3b, 0x9d, 0x34,
+	0x9c, 0xee, 0x5f, 0xc5, 0xe0, 0x1a, 0xa3, 0xe8, 0x3b, 0xa8, 0xbc, 0xd6, 0x35, 0x61, 0xb2, 0xe9,
+	0x74, 0xdc, 0x5e, 0xad, 0xff, 0xe4, 0x36, 0x3d, 0x91, 0xc7, 0x8c, 0x73, 0x81, 0x51, 0xa2, 0xc4,
+	0x06, 0x17, 0x72, 0xe8, 0x11, 0xdc, 0xd7, 0x83, 0xcd, 0x12, 0xc5, 0x69, 0xfe, 0x26, 0x50, 0x12,
+	0xc7, 0x53, 0x42, 0x97, 0xb6, 0x7e, 0xc7, 0x97, 0xe1, 0xa1, 0x45, 0xd1, 0x07, 0x50, 0x8f, 0x49,
+	0x12, 0xf1, 0x64, 0x1e, 0x66, 0x64, 0xce, 0xcc, 0xe4, 0x7a, 0xb8, 0x66, 0xcf, 0xbe, 0x21, 0x73,
+	0xa6, 0x5d, 0x4f, 0xb9, 0xd9, 0xda, 0xe1, 0xfc, 0x1f, 0xd7, 0x57, 0xde, 0xb9, 0xed, 0x05, 0x5e,
+	0xea, 0xa7, 0x62, 0x90, 0xab, 0xe0, 0x42, 0x0e, 0x61, 0xa8, 0x49, 0x5d, 0xa2, 0xd0, 0x54, 0xda,
+	0xcc, 0xee, 0xfe, 0x73, 0x72, 0x51, 0x5c, 0x0c, 0x72, 0xbb, 0x6e, 0x2d, 0xa0, 0xbe, 0x9b, 0x22,
+	0xd4, 0x00, 0x77, 0xc9, 0x36, 0xb6, 0xb9, 0xf5, 0x12, 0x0d, 0x76, 0x3b, 0xbb, 0xd6, 0xff, 0xf8,
+	0x36, 0xd3, 0x64, 0xe7, 0xe0, 0xf3, 0xd2, 0x63, 0x67, 0x50, 0xff, 0xfd, 0xac, 0xed, 0xfc, 0x71,
+	0xd6, 0x76, 0xfe, 0x3e, 0x6b, 0x3b, 0xd3, 0x43, 0xf3, 0x54, 0x7f, 0xf2, 0x4f, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0x98, 0x26, 0x87, 0x7b, 0x9f, 0x06, 0x00, 0x00,
 }

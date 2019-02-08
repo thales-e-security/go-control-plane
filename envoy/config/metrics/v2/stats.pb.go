@@ -39,7 +39,7 @@ type StatsSink struct {
 	// Stats sink specific configuration which depends on the sink being
 	// instantiated. See :ref:`StatsdSink <envoy_api_msg_config.metrics.v2.StatsdSink>` for an
 	// example.
-	Config               *types.Struct `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
+	Config               *types.Struct `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -98,7 +98,7 @@ type StatsConfig struct {
 	// When a tag is matched, the first capture group is removed from the name so
 	// later :ref:`TagSpecifiers <envoy_api_msg_config.metrics.v2.TagSpecifier>` cannot match that
 	// same portion of the match.
-	StatsTags []*TagSpecifier `protobuf:"bytes,1,rep,name=stats_tags,json=statsTags" json:"stats_tags,omitempty"`
+	StatsTags []*TagSpecifier `protobuf:"bytes,1,rep,name=stats_tags,json=statsTags,proto3" json:"stats_tags,omitempty"`
 	// Use all default tag regexes specified in Envoy. These can be combined with
 	// custom tags specified in :ref:`stats_tags
 	// <envoy_api_field_config.metrics.v2.StatsConfig.stats_tags>`. They will be processed before
@@ -114,11 +114,11 @@ type StatsConfig struct {
 	// for a list of the default tags in Envoy.
 	//
 	// If not provided, the value is assumed to be true.
-	UseAllDefaultTags *types.BoolValue `protobuf:"bytes,2,opt,name=use_all_default_tags,json=useAllDefaultTags" json:"use_all_default_tags,omitempty"`
+	UseAllDefaultTags *types.BoolValue `protobuf:"bytes,2,opt,name=use_all_default_tags,json=useAllDefaultTags,proto3" json:"use_all_default_tags,omitempty"`
 	// Inclusion/exclusion matcher for stat name creation. If not provided, all stats are instantiated
 	// as normal. Preventing the instantiation of certain families of stats can improve memory
 	// performance for Envoys running especially large configs.
-	StatsMatcher         *StatsMatcher `protobuf:"bytes,3,opt,name=stats_matcher,json=statsMatcher" json:"stats_matcher,omitempty"`
+	StatsMatcher         *StatsMatcher `protobuf:"bytes,3,opt,name=stats_matcher,json=statsMatcher,proto3" json:"stats_matcher,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -233,10 +233,10 @@ type StatsMatcher_RejectAll struct {
 	RejectAll bool `protobuf:"varint,1,opt,name=reject_all,json=rejectAll,proto3,oneof"`
 }
 type StatsMatcher_ExclusionList struct {
-	ExclusionList *matcher.ListStringMatcher `protobuf:"bytes,2,opt,name=exclusion_list,json=exclusionList,oneof"`
+	ExclusionList *matcher.ListStringMatcher `protobuf:"bytes,2,opt,name=exclusion_list,json=exclusionList,proto3,oneof"`
 }
 type StatsMatcher_InclusionList struct {
-	InclusionList *matcher.ListStringMatcher `protobuf:"bytes,3,opt,name=inclusion_list,json=inclusionList,oneof"`
+	InclusionList *matcher.ListStringMatcher `protobuf:"bytes,3,opt,name=inclusion_list,json=inclusionList,proto3,oneof"`
 }
 
 func (*StatsMatcher_RejectAll) isStatsMatcher_StatsMatcher()     {}
@@ -613,7 +613,7 @@ type isStatsdSink_StatsdSpecifier interface {
 }
 
 type StatsdSink_Address struct {
-	Address *core.Address `protobuf:"bytes,1,opt,name=address,oneof"`
+	Address *core.Address `protobuf:"bytes,1,opt,name=address,proto3,oneof"`
 }
 type StatsdSink_TcpClusterName struct {
 	TcpClusterName string `protobuf:"bytes,2,opt,name=tcp_cluster_name,json=tcpClusterName,proto3,oneof"`
@@ -777,7 +777,7 @@ type isDogStatsdSink_DogStatsdSpecifier interface {
 }
 
 type DogStatsdSink_Address struct {
-	Address *core.Address `protobuf:"bytes,1,opt,name=address,oneof"`
+	Address *core.Address `protobuf:"bytes,1,opt,name=address,proto3,oneof"`
 }
 
 func (*DogStatsdSink_Address) isDogStatsdSink_DogStatsdSpecifier() {}
@@ -1282,6 +1282,9 @@ func encodeVarintStats(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *StatsSink) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -1299,6 +1302,9 @@ func (m *StatsSink) Size() (n int) {
 }
 
 func (m *StatsConfig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.StatsTags) > 0 {
@@ -1322,6 +1328,9 @@ func (m *StatsConfig) Size() (n int) {
 }
 
 func (m *StatsMatcher) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.StatsMatcher != nil {
@@ -1334,12 +1343,18 @@ func (m *StatsMatcher) Size() (n int) {
 }
 
 func (m *StatsMatcher_RejectAll) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	n += 2
 	return n
 }
 func (m *StatsMatcher_ExclusionList) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.ExclusionList != nil {
@@ -1349,6 +1364,9 @@ func (m *StatsMatcher_ExclusionList) Size() (n int) {
 	return n
 }
 func (m *StatsMatcher_InclusionList) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.InclusionList != nil {
@@ -1358,6 +1376,9 @@ func (m *StatsMatcher_InclusionList) Size() (n int) {
 	return n
 }
 func (m *TagSpecifier) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.TagName)
@@ -1374,6 +1395,9 @@ func (m *TagSpecifier) Size() (n int) {
 }
 
 func (m *TagSpecifier_Regex) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Regex)
@@ -1381,6 +1405,9 @@ func (m *TagSpecifier_Regex) Size() (n int) {
 	return n
 }
 func (m *TagSpecifier_FixedValue) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.FixedValue)
@@ -1388,6 +1415,9 @@ func (m *TagSpecifier_FixedValue) Size() (n int) {
 	return n
 }
 func (m *StatsdSink) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.StatsdSpecifier != nil {
@@ -1404,6 +1434,9 @@ func (m *StatsdSink) Size() (n int) {
 }
 
 func (m *StatsdSink_Address) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Address != nil {
@@ -1413,6 +1446,9 @@ func (m *StatsdSink_Address) Size() (n int) {
 	return n
 }
 func (m *StatsdSink_TcpClusterName) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.TcpClusterName)
@@ -1420,6 +1456,9 @@ func (m *StatsdSink_TcpClusterName) Size() (n int) {
 	return n
 }
 func (m *DogStatsdSink) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.DogStatsdSpecifier != nil {
@@ -1436,6 +1475,9 @@ func (m *DogStatsdSink) Size() (n int) {
 }
 
 func (m *DogStatsdSink_Address) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Address != nil {
@@ -1445,6 +1487,9 @@ func (m *DogStatsdSink_Address) Size() (n int) {
 	return n
 }
 func (m *HystrixSink) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.NumBuckets != 0 {
